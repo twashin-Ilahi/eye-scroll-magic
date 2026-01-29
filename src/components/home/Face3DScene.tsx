@@ -74,7 +74,7 @@ function ParticleFlow({
   );
 }
 
-// Animated human face
+// Animated emoji face - classic style with white eyes that open/close
 function AnimatedFace({ 
   leftEyeClosed, 
   rightEyeClosed 
@@ -83,10 +83,10 @@ function AnimatedFace({
   rightEyeClosed: boolean;
 }) {
   const faceRef = useRef<THREE.Group>(null);
-  const leftEyeRef = useRef<THREE.Mesh>(null);
-  const rightEyeRef = useRef<THREE.Mesh>(null);
-  const leftEyeLidRef = useRef<THREE.Mesh>(null);
-  const rightEyeLidRef = useRef<THREE.Mesh>(null);
+  const leftEyeScaleRef = useRef(1);
+  const rightEyeScaleRef = useRef(1);
+  const leftEyeGroupRef = useRef<THREE.Group>(null);
+  const rightEyeGroupRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock, mouse }) => {
     if (faceRef.current) {
@@ -95,174 +95,90 @@ function AnimatedFace({
       faceRef.current.rotation.x = Math.cos(clock.getElapsedTime() * 0.2) * 0.05 + mouse.y * 0.05;
     }
 
-    // Animate eyelids
-    if (leftEyeLidRef.current) {
-      const targetScale = leftEyeClosed ? 1 : 0.1;
-      leftEyeLidRef.current.scale.y = THREE.MathUtils.lerp(
-        leftEyeLidRef.current.scale.y,
-        targetScale,
-        0.15
-      );
+    // Animate left eye closing/opening by scaling Y
+    if (leftEyeGroupRef.current) {
+      const targetScale = leftEyeClosed ? 0.1 : 1;
+      leftEyeScaleRef.current = THREE.MathUtils.lerp(leftEyeScaleRef.current, targetScale, 0.15);
+      leftEyeGroupRef.current.scale.y = leftEyeScaleRef.current;
     }
     
-    if (rightEyeLidRef.current) {
-      const targetScale = rightEyeClosed ? 1 : 0.1;
-      rightEyeLidRef.current.scale.y = THREE.MathUtils.lerp(
-        rightEyeLidRef.current.scale.y,
-        targetScale,
-        0.15
-      );
+    // Animate right eye closing/opening by scaling Y
+    if (rightEyeGroupRef.current) {
+      const targetScale = rightEyeClosed ? 0.1 : 1;
+      rightEyeScaleRef.current = THREE.MathUtils.lerp(rightEyeScaleRef.current, targetScale, 0.15);
+      rightEyeGroupRef.current.scale.y = rightEyeScaleRef.current;
     }
   });
 
   return (
     <group ref={faceRef} position={[0, 0, 0]}>
-      {/* Head - lighter color for better contrast */}
+      {/* Head - classic black emoji body */}
       <mesh>
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial
-          color="#3d4470"
-          roughness={0.5}
+          color="#1a1a1a"
+          roughness={0.3}
           metalness={0.1}
-          emissive="#2a2f4f"
-          emissiveIntensity={0.15}
         />
       </mesh>
 
-      {/* Left Eye Socket - much larger and more prominent */}
-      <group position={[-0.32, 0.18, 0.82]}>
-        {/* Eye socket shadow */}
-        <mesh position={[0, 0, -0.02]}>
-          <circleGeometry args={[0.32, 32]} />
-          <meshStandardMaterial color="#1a1f3f" />
-        </mesh>
-        {/* Eye white - larger and brighter */}
-        <mesh ref={leftEyeRef}>
-          <sphereGeometry args={[0.28, 32, 32]} />
+      {/* Left Eye - white oval that scales to close */}
+      <group ref={leftEyeGroupRef} position={[-0.35, 0.15, 0.85]}>
+        {/* Main white eye */}
+        <mesh>
+          <sphereGeometry args={[0.22, 32, 32]} />
           <meshStandardMaterial 
             color="#ffffff" 
-            roughness={0.05}
+            roughness={0.1}
             emissive="#ffffff"
-            emissiveIntensity={0.1}
+            emissiveIntensity={0.3}
           />
         </mesh>
-        {/* Iris - bigger and more vibrant */}
+        {/* Pupil - black dot */}
         <mesh position={[0, 0, 0.18]}>
-          <circleGeometry args={[0.16, 32]} />
-          <meshStandardMaterial 
-            color="#4A90E2" 
-            emissive="#4A90E2"
-            emissiveIntensity={0.8}
-          />
-        </mesh>
-        {/* Iris detail ring */}
-        <mesh position={[0, 0, 0.185]}>
-          <ringGeometry args={[0.12, 0.16, 32]} />
-          <meshStandardMaterial 
-            color="#2563eb" 
-            emissive="#2563eb"
-            emissiveIntensity={0.5}
-          />
-        </mesh>
-        {/* Pupil - larger */}
-        <mesh position={[0, 0, 0.19]}>
-          <circleGeometry args={[0.07, 32]} />
+          <circleGeometry args={[0.08, 32]} />
           <meshStandardMaterial color="#000000" />
         </mesh>
-        {/* Eye highlight - top */}
-        <mesh position={[0.05, 0.06, 0.2]}>
-          <circleGeometry args={[0.04, 16]} />
+        {/* Eye shine */}
+        <mesh position={[0.05, 0.05, 0.2]}>
+          <circleGeometry args={[0.03, 16]} />
           <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-        </mesh>
-        {/* Eye highlight - small */}
-        <mesh position={[-0.03, -0.02, 0.2]}>
-          <circleGeometry args={[0.02, 16]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
-        </mesh>
-        {/* Eyelid - matches head color */}
-        <mesh ref={leftEyeLidRef} position={[0, 0.15, 0.1]}>
-          <boxGeometry args={[0.6, 0.3, 0.15]} />
-          <meshStandardMaterial color="#3d4470" />
         </mesh>
       </group>
 
-      {/* Right Eye Socket - much larger and more prominent */}
-      <group position={[0.32, 0.18, 0.82]}>
-        {/* Eye socket shadow */}
-        <mesh position={[0, 0, -0.02]}>
-          <circleGeometry args={[0.32, 32]} />
-          <meshStandardMaterial color="#1a1f3f" />
-        </mesh>
-        {/* Eye white - larger and brighter */}
-        <mesh ref={rightEyeRef}>
-          <sphereGeometry args={[0.28, 32, 32]} />
+      {/* Right Eye - white oval that scales to close */}
+      <group ref={rightEyeGroupRef} position={[0.35, 0.15, 0.85]}>
+        {/* Main white eye */}
+        <mesh>
+          <sphereGeometry args={[0.22, 32, 32]} />
           <meshStandardMaterial 
             color="#ffffff" 
-            roughness={0.05}
+            roughness={0.1}
             emissive="#ffffff"
-            emissiveIntensity={0.1}
+            emissiveIntensity={0.3}
           />
         </mesh>
-        {/* Iris - bigger and more vibrant */}
+        {/* Pupil - black dot */}
         <mesh position={[0, 0, 0.18]}>
-          <circleGeometry args={[0.16, 32]} />
-          <meshStandardMaterial 
-            color="#9B59B6" 
-            emissive="#9B59B6"
-            emissiveIntensity={0.8}
-          />
-        </mesh>
-        {/* Iris detail ring */}
-        <mesh position={[0, 0, 0.185]}>
-          <ringGeometry args={[0.12, 0.16, 32]} />
-          <meshStandardMaterial 
-            color="#7c3aed" 
-            emissive="#7c3aed"
-            emissiveIntensity={0.5}
-          />
-        </mesh>
-        {/* Pupil - larger */}
-        <mesh position={[0, 0, 0.19]}>
-          <circleGeometry args={[0.07, 32]} />
+          <circleGeometry args={[0.08, 32]} />
           <meshStandardMaterial color="#000000" />
         </mesh>
-        {/* Eye highlight - top */}
-        <mesh position={[0.05, 0.06, 0.2]}>
-          <circleGeometry args={[0.04, 16]} />
+        {/* Eye shine */}
+        <mesh position={[0.05, 0.05, 0.2]}>
+          <circleGeometry args={[0.03, 16]} />
           <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-        </mesh>
-        {/* Eye highlight - small */}
-        <mesh position={[-0.03, -0.02, 0.2]}>
-          <circleGeometry args={[0.02, 16]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
-        </mesh>
-        {/* Eyelid - matches head color */}
-        <mesh ref={rightEyeLidRef} position={[0, 0.15, 0.1]}>
-          <boxGeometry args={[0.6, 0.3, 0.15]} />
-          <meshStandardMaterial color="#3d4470" />
         </mesh>
       </group>
 
-      {/* Subtle eyebrows for expression */}
-      <mesh position={[-0.32, 0.48, 0.75]} rotation={[0, 0, 0.15]}>
-        <boxGeometry args={[0.35, 0.06, 0.08]} />
-        <meshStandardMaterial color="#2a2f4f" />
-      </mesh>
-      <mesh position={[0.32, 0.48, 0.75]} rotation={[0, 0, -0.15]}>
-        <boxGeometry args={[0.35, 0.06, 0.08]} />
-        <meshStandardMaterial color="#2a2f4f" />
-      </mesh>
-
-      {/* Nose - more subtle */}
-      <mesh position={[0, -0.05, 0.95]}>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshStandardMaterial color="#4a4f7f" roughness={0.6} />
-      </mesh>
-
-      {/* Mouth - friendly smile */}
-      <mesh position={[0, -0.35, 0.9]} rotation={[0.2, 0, 0]}>
-        <torusGeometry args={[0.15, 0.025, 8, 16, Math.PI]} />
-        <meshStandardMaterial color="#5a5f8f" roughness={0.4} />
+      {/* Smile - white curved line */}
+      <mesh position={[0, -0.3, 0.92]} rotation={[0.1, 0, 0]}>
+        <torusGeometry args={[0.25, 0.04, 8, 32, Math.PI]} />
+        <meshStandardMaterial 
+          color="#ffffff" 
+          roughness={0.1}
+          emissive="#ffffff"
+          emissiveIntensity={0.2}
+        />
       </mesh>
     </group>
   );
