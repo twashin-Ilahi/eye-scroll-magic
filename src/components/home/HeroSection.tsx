@@ -7,23 +7,17 @@ import { Suspense } from "react";
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 px-6">
+    <section className="relative min-h-screen flex flex-col lg:flex-row items-center justify-center overflow-hidden pt-24 pb-16 px-6 gap-8">
       <FloatingShapes />
-      
-      {/* 3D Eye Scroll Scene */}
-      <div className="absolute inset-0 z-0">
-        <Suspense fallback={null}>
-          <EyeScrollScene />
-        </Suspense>
-      </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
+      {/* Text Content - Left Side */}
+      <div className="relative z-10 flex-1 max-w-xl text-center lg:text-left">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
         >
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           <span className="text-sm text-primary font-medium">Now available for macOS & Windows</span>
@@ -34,7 +28,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
+          className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
         >
           Scroll with
           <br />
@@ -46,7 +40,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="text-xl md:text-2xl text-muted-foreground mb-4 max-w-2xl mx-auto"
+          className="text-lg md:text-xl text-muted-foreground mb-3"
         >
           Free. Fast. Private.
         </motion.p>
@@ -55,7 +49,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-lg text-muted-foreground/80 mb-12 max-w-xl mx-auto"
+          className="text-base text-muted-foreground/80 mb-8"
         >
           NavEye uses your webcam to detect eye movements, letting you scroll any app hands-free. 
           No data ever leaves your device.
@@ -66,13 +60,13 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3"
         >
           <Link to="/download?platform=mac">
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="btn-primary flex items-center gap-3 min-w-[220px]"
+              className="btn-primary flex items-center gap-3 min-w-[200px]"
             >
               <Apple className="w-5 h-5" />
               Download for Mac
@@ -83,7 +77,7 @@ export const HeroSection = () => {
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="btn-secondary flex items-center gap-3 min-w-[220px]"
+              className="btn-secondary flex items-center gap-3 min-w-[200px]"
             >
               <Monitor className="w-5 h-5" />
               Download for Windows
@@ -96,7 +90,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-16 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground"
+          className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-muted-foreground"
         >
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-500" />
@@ -112,6 +106,18 @@ export const HeroSection = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* 3D Eye Scroll Scene - Right Side */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, delay: 0.3 }}
+        className="relative z-10 flex-1 w-full h-[400px] md:h-[500px] lg:h-[600px] max-w-2xl"
+      >
+        <Suspense fallback={null}>
+          <EyeScrollScene />
+        </Suspense>
+      </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
