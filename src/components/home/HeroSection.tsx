@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Apple, Monitor, ChevronDown } from "lucide-react";
-import heroIllustration from "@/assets/hero-illustration.png";
+import { Face3DScene } from "./Face3DScene";
+import { Suspense } from "react";
 
 export const HeroSection = () => {
   return (
@@ -128,29 +129,20 @@ export const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Hero Illustration - Right Side */}
+      {/* 3D Face Scene - Right Side */}
       <motion.div 
-        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.3 }}
-        className="relative z-10 flex-1 w-full max-w-2xl flex items-center justify-center"
+        className="relative z-10 flex-1 w-full h-[400px] md:h-[500px] lg:h-[600px] max-w-2xl"
       >
-        <div className="relative">
-          {/* Glow effect behind image */}
-          <div 
-            className="absolute inset-0 blur-3xl opacity-40"
-            style={{
-              background: "radial-gradient(ellipse at center, rgba(74, 144, 226, 0.4) 0%, rgba(155, 89, 182, 0.3) 50%, transparent 70%)"
-            }}
-          />
-          <motion.img 
-            src={heroIllustration} 
-            alt="Person using NavEye eye-tracking to scroll hands-free while holding a coffee mug"
-            className="relative z-10 w-full h-auto max-h-[500px] lg:max-h-[600px] object-contain drop-shadow-2xl"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
+        <Suspense fallback={
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+          </div>
+        }>
+          <Face3DScene />
+        </Suspense>
       </motion.div>
 
       {/* Scroll indicator */}
