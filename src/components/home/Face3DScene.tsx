@@ -73,7 +73,7 @@ function ParticleFlow({
   );
 }
 
-// Simple Emoji Face
+// 3D Emoji Face
 function SimpleEmojiFace({ 
   leftEyeClosed, 
   rightEyeClosed 
@@ -114,62 +114,72 @@ function SimpleEmojiFace({
 
   return (
     <group ref={faceRef}>
-      {/* Glow rings */}
+      {/* Outer glow */}
       <mesh>
-        <ringGeometry args={[1.05, 1.15, 64]} />
-        <meshBasicMaterial color="#4A90E2" transparent opacity={0.2} side={THREE.DoubleSide} />
+        <sphereGeometry args={[1.08, 64, 64]} />
+        <meshBasicMaterial color="#4A90E2" transparent opacity={0.15} side={THREE.BackSide} />
       </mesh>
       <mesh>
-        <ringGeometry args={[1.12, 1.2, 64]} />
-        <meshBasicMaterial color="#9B59B6" transparent opacity={0.1} side={THREE.DoubleSide} />
+        <sphereGeometry args={[1.12, 64, 64]} />
+        <meshBasicMaterial color="#9B59B6" transparent opacity={0.08} side={THREE.BackSide} />
       </mesh>
 
-      {/* Face - yellow circle */}
+      {/* Main face sphere - yellow */}
       <mesh>
-        <circleGeometry args={[1, 64]} />
+        <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial 
           color="#FFD93D" 
           roughness={0.3}
           metalness={0.1}
+          envMapIntensity={0.5}
         />
       </mesh>
 
-      {/* Face depth/3D effect */}
-      <mesh position={[0, 0, -0.05]}>
-        <circleGeometry args={[1.02, 64]} />
-        <meshStandardMaterial color="#E6C235" roughness={0.4} />
+      {/* Subtle highlight on top */}
+      <mesh position={[0.2, 0.4, 0.85]}>
+        <sphereGeometry args={[0.15, 32, 32]} />
+        <meshBasicMaterial color="#FFF176" transparent opacity={0.4} />
       </mesh>
 
       {/* Left Eye */}
-      <group ref={leftEyeRef} position={[-0.32, 0.2, 0.02]}>
-        <mesh>
-          <circleGeometry args={[0.12, 32]} />
-          <meshBasicMaterial color="#1a1a1a" />
+      <group ref={leftEyeRef} position={[-0.32, 0.18, 0.88]}>
+        {/* Eye white background */}
+        <mesh scale={[1, 1, 0.5]}>
+          <sphereGeometry args={[0.18, 32, 32]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.2} />
+        </mesh>
+        {/* Pupil */}
+        <mesh position={[0, 0, 0.1]} scale={[1, 1, 0.5]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.1} />
         </mesh>
         {/* Eye shine */}
-        <mesh position={[0.03, 0.03, 0.01]}>
-          <circleGeometry args={[0.03, 16]} />
+        <mesh position={[0.04, 0.04, 0.12]}>
+          <sphereGeometry args={[0.03, 16, 16]} />
           <meshBasicMaterial color="#ffffff" />
         </mesh>
       </group>
 
       {/* Right Eye */}
-      <group ref={rightEyeRef} position={[0.32, 0.2, 0.02]}>
-        <mesh>
-          <circleGeometry args={[0.12, 32]} />
-          <meshBasicMaterial color="#1a1a1a" />
+      <group ref={rightEyeRef} position={[0.32, 0.18, 0.88]}>
+        <mesh scale={[1, 1, 0.5]}>
+          <sphereGeometry args={[0.18, 32, 32]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.2} />
         </mesh>
-        {/* Eye shine */}
-        <mesh position={[0.03, 0.03, 0.01]}>
-          <circleGeometry args={[0.03, 16]} />
+        <mesh position={[0, 0, 0.1]} scale={[1, 1, 0.5]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshStandardMaterial color="#1a1a1a" roughness={0.1} />
+        </mesh>
+        <mesh position={[0.04, 0.04, 0.12]}>
+          <sphereGeometry args={[0.03, 16, 16]} />
           <meshBasicMaterial color="#ffffff" />
         </mesh>
       </group>
 
-      {/* Smile */}
-      <mesh position={[0, -0.25, 0.02]} rotation={[0, 0, Math.PI]}>
-        <torusGeometry args={[0.35, 0.04, 16, 32, Math.PI]} />
-        <meshBasicMaterial color="#1a1a1a" />
+      {/* 3D Smile */}
+      <mesh position={[0, -0.2, 0.9]} rotation={[0.3, 0, Math.PI]}>
+        <torusGeometry args={[0.3, 0.05, 16, 32, Math.PI]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.3} />
       </mesh>
     </group>
   );
