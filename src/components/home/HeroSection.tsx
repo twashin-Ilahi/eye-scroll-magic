@@ -1,14 +1,19 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Apple, Monitor } from "lucide-react";
-import { FloatingShapes } from "./FloatingShapes";
-import { EyeScrollScene } from "./EyeScrollScene";
+import { Apple, Monitor, ChevronDown } from "lucide-react";
+import { Face3DScene } from "./Face3DScene";
 import { Suspense } from "react";
 
 export const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex flex-col lg:flex-row items-center justify-center overflow-hidden pt-24 pb-16 px-6 gap-8">
-      <FloatingShapes />
+      {/* Gradient overlay */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{ 
+          background: "radial-gradient(ellipse at 30% 20%, rgba(74, 144, 226, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(155, 89, 182, 0.1) 0%, transparent 50%)"
+        }}
+      />
 
       {/* Text Content - Left Side */}
       <div className="relative z-10 flex-1 max-w-xl text-center lg:text-left">
@@ -17,7 +22,7 @@ export const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-6 backdrop-blur-sm"
         >
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
           <span className="text-sm text-primary font-medium">Now available for macOS & Windows</span>
@@ -54,6 +59,23 @@ export const HeroSection = () => {
           NavEye uses your webcam to detect eye movements, letting you scroll any app hands-free. 
           No data ever leaves your device.
         </motion.p>
+
+        {/* Eye gesture indicators */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.45 }}
+          className="flex items-center justify-center lg:justify-start gap-6 mb-8 text-sm"
+        >
+          <div className="flex items-center gap-2 text-primary">
+            <div className="w-3 h-3 rounded-full bg-primary" />
+            <span>Left eye = Scroll down</span>
+          </div>
+          <div className="flex items-center gap-2 text-accent">
+            <div className="w-3 h-3 rounded-full bg-accent" />
+            <span>Right eye = Scroll up</span>
+          </div>
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -107,15 +129,19 @@ export const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* 3D Eye Scroll Scene - Right Side */}
+      {/* 3D Face Scene - Right Side */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.3 }}
         className="relative z-10 flex-1 w-full h-[400px] md:h-[500px] lg:h-[600px] max-w-2xl"
       >
-        <Suspense fallback={null}>
-          <EyeScrollScene />
+        <Suspense fallback={
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+          </div>
+        }>
+          <Face3DScene />
         </Suspense>
       </motion.div>
 
@@ -129,13 +155,10 @@ export const HeroSection = () => {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2"
+          className="flex flex-col items-center gap-2 text-muted-foreground/50"
         >
-          <motion.div
-            animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50"
-          />
+          <span className="text-xs">Scroll to explore</span>
+          <ChevronDown className="w-5 h-5" />
         </motion.div>
       </motion.div>
     </section>
