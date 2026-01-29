@@ -7,6 +7,7 @@ const AnimatedTerminal = () => {
   const [lines, setLines] = useState<string[]>([]);
   const terminalRef = useRef(null);
   const isInView = useInView(terminalRef, { once: true });
+  const indexRef = useRef(0);
 
   const commands = [
     "$ brew install naveye",
@@ -24,11 +25,13 @@ const AnimatedTerminal = () => {
   useEffect(() => {
     if (!isInView) return;
 
-    let index = 0;
     const interval = setInterval(() => {
-      if (index < commands.length) {
-        setLines(prev => [...prev, commands[index]]);
-        index++;
+      if (indexRef.current < commands.length) {
+        const currentCommand = commands[indexRef.current];
+        if (currentCommand) {
+          setLines(prev => [...prev, currentCommand]);
+        }
+        indexRef.current++;
       } else {
         clearInterval(interval);
       }
@@ -36,6 +39,15 @@ const AnimatedTerminal = () => {
 
     return () => clearInterval(interval);
   }, [isInView]);
+
+  const getLineColor = (line: string) => {
+    if (!line) return "text-muted-foreground";
+    if (line.startsWith("$")) return "text-primary";
+    if (line.startsWith("✓") || line.startsWith("✨")) return "text-green-400";
+    if (line.startsWith("🔵")) return "text-blue-400";
+    if (line.startsWith("🟣")) return "text-purple-400";
+    return "text-muted-foreground";
+  };
 
   return (
     <div 
@@ -52,19 +64,13 @@ const AnimatedTerminal = () => {
       
       {/* Terminal content */}
       <div className="p-4 font-mono text-sm h-64 overflow-hidden">
-        {lines.map((line, i) => (
+        {lines.filter(Boolean).map((line, i) => (
           <motion.div
             key={i}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3 }}
-            className={`mb-1 ${
-              line.startsWith("$") ? "text-primary" :
-              line.startsWith("✓") || line.startsWith("✨") ? "text-green-400" :
-              line.startsWith("🔵") ? "text-blue-400" :
-              line.startsWith("🟣") ? "text-purple-400" :
-              "text-muted-foreground"
-            }`}
+            className={`mb-1 ${getLineColor(line)}`}
           >
             {line}
           </motion.div>
