@@ -243,13 +243,13 @@ function FloatingDocument({ scrollDirection }: { scrollDirection: "up" | "down" 
   });
 
   return (
-    <group ref={docRef} position={[2.2, 0.3, -0.5]} rotation={[0, -0.3, 0]}>
+    <group ref={docRef} position={[2.2, 0.2, -0.5]} rotation={[0, -0.3, 0]}>
       <mesh>
-        <boxGeometry args={[1.2, 1.6, 0.05]} />
+        <boxGeometry args={[1.2, 2.2, 0.05]} />
         <meshStandardMaterial color="#1a1f3f" roughness={0.3} metalness={0.5} />
       </mesh>
       <mesh position={[0, 0, 0.03]}>
-        <planeGeometry args={[1.1, 1.5]} />
+        <planeGeometry args={[1.1, 2.1]} />
         <meshBasicMaterial map={canvasTexture} />
       </mesh>
       <pointLight 
