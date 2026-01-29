@@ -85,8 +85,10 @@ function AnimatedFace({
   const faceRef = useRef<THREE.Group>(null);
   const leftEyeScaleRef = useRef(1);
   const rightEyeScaleRef = useRef(1);
+  const smileScaleRef = useRef(1);
   const leftEyeGroupRef = useRef<THREE.Group>(null);
   const rightEyeGroupRef = useRef<THREE.Group>(null);
+  const smileGroupRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock, mouse }) => {
     if (faceRef.current) {
@@ -107,6 +109,22 @@ function AnimatedFace({
       const targetScale = rightEyeClosed ? 0.15 : 1;
       rightEyeScaleRef.current = THREE.MathUtils.lerp(rightEyeScaleRef.current, targetScale, 0.12);
       rightEyeGroupRef.current.scale.y = rightEyeScaleRef.current;
+    }
+
+    // Animate smile - wider when both eyes open (happy), subtle pulse
+    if (smileGroupRef.current) {
+      const isHappy = !leftEyeClosed && !rightEyeClosed;
+      const baseScale = isHappy ? 1.15 : 0.95;
+      const pulse = Math.sin(clock.getElapsedTime() * 2) * 0.05;
+      const targetSmileScale = baseScale + (isHappy ? pulse : 0);
+      
+      smileScaleRef.current = THREE.MathUtils.lerp(smileScaleRef.current, targetSmileScale, 0.1);
+      smileGroupRef.current.scale.x = smileScaleRef.current;
+      smileGroupRef.current.scale.y = THREE.MathUtils.lerp(
+        smileGroupRef.current.scale.y,
+        isHappy ? 1.1 : 0.9,
+        0.1
+      );
     }
   });
 
@@ -186,7 +204,7 @@ function AnimatedFace({
       </group>
 
       {/* Smile - friendly modern U-shaped smile */}
-      <group position={[0, -0.32, 0.85]}>
+      <group ref={smileGroupRef} position={[0, -0.32, 0.85]}>
         {/* Main smile curve - wider U shape */}
         <mesh rotation={[0.2, 0, 0]}>
           <torusGeometry args={[0.22, 0.035, 16, 32, Math.PI]} />
