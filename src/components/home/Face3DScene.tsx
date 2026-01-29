@@ -203,22 +203,22 @@ function AnimatedFace({
         </mesh>
       </group>
 
-      {/* Smile - white U-shaped smile */}
-      <group ref={smileGroupRef} position={[0, -0.32, 0.88]}>
+      {/* Smile - white U-shaped smile - positioned in front of face */}
+      <group ref={smileGroupRef} position={[0, -0.35, 0.95]}>
         {/* Main smile curve - clear white U shape */}
-        <mesh rotation={[0.15, 0, 0]}>
-          <torusGeometry args={[0.2, 0.04, 16, 32, Math.PI]} />
+        <mesh rotation={[0.3, 0, 0]}>
+          <torusGeometry args={[0.18, 0.045, 16, 32, Math.PI]} />
           <meshStandardMaterial 
             color="#ffffff" 
             roughness={0.1}
             emissive="#ffffff"
-            emissiveIntensity={0.2}
+            emissiveIntensity={0.3}
           />
         </mesh>
-        {/* Smile highlight */}
-        <mesh position={[0, -0.06, 0.03]} rotation={[0.2, 0, 0]}>
-          <torusGeometry args={[0.15, 0.015, 8, 24, Math.PI * 0.7]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
+        {/* Smile highlight for glossy look */}
+        <mesh position={[0, -0.05, 0.04]} rotation={[0.35, 0, 0]}>
+          <torusGeometry args={[0.14, 0.02, 8, 24, Math.PI * 0.6]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.7} />
         </mesh>
       </group>
     </group>
