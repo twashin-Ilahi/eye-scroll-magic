@@ -148,97 +148,103 @@ function SimpleEmojiFace({
         <meshBasicMaterial color="#4A90E2" transparent opacity={0.08} side={THREE.BackSide} />
       </mesh>
 
-      {/* Main face sphere - dark theme with emissive glow */}
+      {/* Main face sphere - dark crystalline theme */}
       <mesh>
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial 
-          color="#1a1f3a"
-          roughness={0.2}
-          metalness={0.3}
+          color="#0a0e1a"
+          roughness={0.15}
+          metalness={0.4}
           emissive="#4A90E2"
-          emissiveIntensity={0.15}
-          envMapIntensity={0.8}
+          emissiveIntensity={0.1}
+          envMapIntensity={1}
         />
       </mesh>
 
-      {/* Inner glow layer */}
+      {/* Surface rim glow */}
       <mesh>
-        <sphereGeometry args={[0.98, 64, 64]} />
-        <meshBasicMaterial color="#4A90E2" transparent opacity={0.1} />
+        <sphereGeometry args={[1.01, 64, 64]} />
+        <meshBasicMaterial color="#4A90E2" transparent opacity={0.08} />
       </mesh>
 
       {/* Subtle highlight on top */}
-      <mesh position={[0.25, 0.45, 0.8]}>
-        <sphereGeometry args={[0.12, 32, 32]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
+      <mesh position={[0.3, 0.5, 0.75]}>
+        <sphereGeometry args={[0.1, 32, 32]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
       </mesh>
 
-      {/* Left Eye - glowing white */}
-      <group ref={leftEyeRef} position={[-0.32, 0.18, 0.88]}>
-        {/* Eye glow */}
-        <mesh scale={[1.2, 1.2, 0.6]}>
-          <sphereGeometry args={[0.18, 32, 32]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
-        </mesh>
-        {/* Eye white */}
-        <mesh scale={[1, 1, 0.5]}>
+      {/* Left Eye - glowing white oval */}
+      <group ref={leftEyeRef} position={[-0.32, 0.15, 0.88]}>
+        {/* Eye outer glow */}
+        <mesh scale={[1.3, 1.3, 0.6]}>
           <sphereGeometry args={[0.16, 32, 32]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.25} />
+        </mesh>
+        {/* Eye main */}
+        <mesh scale={[1, 1, 0.45]}>
+          <sphereGeometry args={[0.14, 32, 32]} />
           <meshStandardMaterial 
             color="#ffffff" 
-            roughness={0.1}
+            roughness={0.05}
             emissive="#ffffff"
-            emissiveIntensity={0.3}
+            emissiveIntensity={0.5}
           />
         </mesh>
         {/* Eye shine */}
-        <mesh position={[0.04, 0.04, 0.1]}>
-          <sphereGeometry args={[0.04, 16, 16]} />
+        <mesh position={[0.035, 0.035, 0.08]}>
+          <sphereGeometry args={[0.035, 16, 16]} />
           <meshBasicMaterial color="#ffffff" />
         </mesh>
       </group>
 
-      {/* Right Eye - glowing white */}
-      <group ref={rightEyeRef} position={[0.32, 0.18, 0.88]}>
-        <mesh scale={[1.2, 1.2, 0.6]}>
-          <sphereGeometry args={[0.18, 32, 32]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
-        </mesh>
-        <mesh scale={[1, 1, 0.5]}>
+      {/* Right Eye - glowing white oval */}
+      <group ref={rightEyeRef} position={[0.32, 0.15, 0.88]}>
+        <mesh scale={[1.3, 1.3, 0.6]}>
           <sphereGeometry args={[0.16, 32, 32]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.25} />
+        </mesh>
+        <mesh scale={[1, 1, 0.45]}>
+          <sphereGeometry args={[0.14, 32, 32]} />
           <meshStandardMaterial 
             color="#ffffff" 
-            roughness={0.1}
+            roughness={0.05}
             emissive="#ffffff"
-            emissiveIntensity={0.3}
+            emissiveIntensity={0.5}
           />
         </mesh>
-        <mesh position={[0.04, 0.04, 0.1]}>
-          <sphereGeometry args={[0.04, 16, 16]} />
+        <mesh position={[0.035, 0.035, 0.08]}>
+          <sphereGeometry args={[0.035, 16, 16]} />
           <meshBasicMaterial color="#ffffff" />
         </mesh>
       </group>
 
-      {/* Filled 3D Smile - half sphere cut */}
-      <group position={[0, -0.22, 0.85]}>
-        {/* Smile arc - thick filled curve */}
-        <mesh rotation={[0.25, 0, Math.PI]}>
-          <torusGeometry args={[0.22, 0.045, 16, 32, Math.PI]} />
+      {/* SMILE - Filled U-shape using stretched half-sphere */}
+      <group position={[0, -0.28, 0.92]}>
+        {/* Smile glow aura */}
+        <mesh rotation={[0.15, 0, 0]} scale={[1.3, 0.8, 0.5]}>
+          <sphereGeometry args={[0.22, 32, 16, 0, Math.PI * 2, Math.PI * 0.5, Math.PI * 0.5]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.2} side={THREE.DoubleSide} />
+        </mesh>
+        {/* Main smile curve - thick and visible */}
+        <mesh rotation={[0.15, 0, Math.PI]}>
+          <torusGeometry args={[0.18, 0.04, 16, 32, Math.PI]} />
           <meshStandardMaterial 
             color="#ffffff" 
-            roughness={0.1}
+            roughness={0.05}
             emissive="#ffffff"
-            emissiveIntensity={0.3}
+            emissiveIntensity={0.5}
           />
         </mesh>
-        {/* Smile glow */}
-        <mesh rotation={[0.25, 0, Math.PI]}>
-          <torusGeometry args={[0.22, 0.08, 16, 32, Math.PI]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.15} />
+        {/* Inner smile highlight */}
+        <mesh rotation={[0.12, 0, Math.PI]} position={[0, 0.02, 0.02]}>
+          <torusGeometry args={[0.14, 0.025, 12, 24, Math.PI * 0.8]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
         </mesh>
       </group>
     </group>
   );
 }
+
 
 // Floating document for scroll demo
 function FloatingDocument({ scrollDirection }: { scrollDirection: "up" | "down" | "none" }) {
