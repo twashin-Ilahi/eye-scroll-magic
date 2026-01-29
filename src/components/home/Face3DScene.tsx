@@ -112,6 +112,33 @@ function AnimatedFace({
 
   return (
     <group ref={faceRef} position={[0, 0, 0]}>
+      {/* Rim glow - outer sphere with subtle blue/purple gradient glow */}
+      <mesh>
+        <sphereGeometry args={[1.08, 64, 64]} />
+        <meshBasicMaterial
+          color="#4A90E2"
+          transparent
+          opacity={0.15}
+          side={THREE.BackSide}
+        />
+      </mesh>
+      
+      {/* Secondary rim glow - purple accent */}
+      <mesh>
+        <sphereGeometry args={[1.12, 64, 64]} />
+        <meshBasicMaterial
+          color="#9B59B6"
+          transparent
+          opacity={0.08}
+          side={THREE.BackSide}
+        />
+      </mesh>
+
+      {/* Backlight for rim lighting effect */}
+      <pointLight position={[0, 0, -1.5]} intensity={0.6} color="#4A90E2" distance={3} />
+      <pointLight position={[-1, 0.5, -1]} intensity={0.3} color="#9B59B6" distance={2.5} />
+      <pointLight position={[1, 0.5, -1]} intensity={0.3} color="#4A90E2" distance={2.5} />
+
       {/* Head - dark black emoji sphere */}
       <mesh>
         <sphereGeometry args={[1, 64, 64]} />
