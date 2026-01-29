@@ -8,96 +8,103 @@
 
 @layer base {
   :root {
-    /* Core Colors - Deep Navy/Slate with Electric Accents */
-    --background: 222 47% 6%;
+    /* Core Colors - Deep Navy with Electric Blue/Purple Accents */
+    --background: 230 60% 8%;
     --foreground: 210 40% 98%;
 
-    --card: 222 47% 9%;
+    --card: 230 50% 10%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222 47% 9%;
+    --popover: 230 50% 10%;
     --popover-foreground: 210 40% 98%;
 
-    /* Electric Cyan Primary */
-    --primary: 192 95% 55%;
-    --primary-foreground: 222 47% 6%;
+    /* Electric Blue Primary */
+    --primary: 212 80% 58%;
+    --primary-foreground: 230 60% 8%;
 
-    /* Soft Slate Secondary */
-    --secondary: 222 30% 15%;
+    /* Deep Slate Secondary */
+    --secondary: 230 40% 14%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 222 30% 18%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 230 35% 16%;
+    --muted-foreground: 215 20% 60%;
 
-    /* Soft Purple Accent */
-    --accent: 262 83% 65%;
+    /* Electric Purple Accent */
+    --accent: 280 60% 55%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84% 60%;
+    /* Alert Red */
+    --destructive: 4 80% 56%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 18%;
-    --ring: 192 95% 55%;
+    --border: 230 35% 18%;
+    --input: 230 35% 18%;
+    --ring: 212 80% 58%;
 
     --radius: 1rem;
 
     /* Custom Design Tokens */
-    --gradient-hero: linear-gradient(135deg, hsl(192 95% 55% / 0.15) 0%, hsl(262 83% 65% / 0.15) 50%, hsl(192 95% 55% / 0.1) 100%);
-    --gradient-button: linear-gradient(135deg, hsl(192 95% 55%) 0%, hsl(192 95% 65%) 100%);
-    --gradient-button-hover: linear-gradient(135deg, hsl(192 95% 60%) 0%, hsl(192 95% 70%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(262 83% 60%) 0%, hsl(262 83% 70%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(222 47% 12% / 0.8) 0%, hsl(222 47% 9% / 0.9) 100%);
+    --gradient-hero: linear-gradient(135deg, #0a0e27 0%, #151b3d 50%, #0a0e27 100%);
+    --gradient-button: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+    --gradient-button-hover: linear-gradient(135deg, #5BA3F5 0%, #6BB4FF 100%);
+    --gradient-accent: linear-gradient(135deg, #9B59B6 0%, #B370CF 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(21, 27, 61, 0.8) 0%, rgba(10, 14, 39, 0.9) 100%);
     
-    --shadow-glow: 0 0 40px hsl(192 95% 55% / 0.3);
-    --shadow-glow-lg: 0 0 80px hsl(192 95% 55% / 0.4);
-    --shadow-card: 0 8px 32px hsl(222 47% 3% / 0.5);
-    --shadow-float: 0 20px 60px hsl(222 47% 3% / 0.4);
+    --shadow-glow: 0 0 40px rgba(74, 144, 226, 0.3);
+    --shadow-glow-lg: 0 0 80px rgba(74, 144, 226, 0.4);
+    --shadow-glow-purple: 0 0 40px rgba(155, 89, 182, 0.3);
+    --shadow-card: 0 8px 32px rgba(10, 14, 39, 0.6);
+    --shadow-float: 0 20px 60px rgba(10, 14, 39, 0.5);
 
     /* Floating Shape Colors */
-    --shape-cyan: hsl(192 95% 55% / 0.12);
-    --shape-purple: hsl(262 83% 65% / 0.1);
-    --shape-blue: hsl(220 90% 60% / 0.08);
+    --shape-blue: rgba(74, 144, 226, 0.12);
+    --shape-purple: rgba(155, 89, 182, 0.1);
+    --shape-cyan: rgba(74, 180, 226, 0.08);
 
-    --sidebar-background: 222 47% 6%;
+    /* Particle Colors */
+    --particle-blue: #4A90E2;
+    --particle-purple: #9B59B6;
+    --particle-red: #E74C3C;
+
+    --sidebar-background: 230 60% 8%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 192 95% 55%;
-    --sidebar-primary-foreground: 222 47% 6%;
-    --sidebar-accent: 222 30% 15%;
+    --sidebar-primary: 212 80% 58%;
+    --sidebar-primary-foreground: 230 60% 8%;
+    --sidebar-accent: 230 40% 14%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 222 30% 18%;
-    --sidebar-ring: 192 95% 55%;
+    --sidebar-border: 230 35% 18%;
+    --sidebar-ring: 212 80% 58%;
   }
 
   /* Light mode fallback (keeping dark as primary for this premium look) */
   .light {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    --background: 230 30% 96%;
+    --foreground: 230 60% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 230 60% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 230 60% 10%;
 
-    --primary: 192 95% 45%;
+    --primary: 212 80% 48%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 230 20% 92%;
+    --secondary-foreground: 230 60% 10%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 230 20% 92%;
+    --muted-foreground: 230 30% 40%;
 
-    --accent: 262 83% 58%;
+    --accent: 280 60% 50%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 4 80% 50%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 192 95% 45%;
+    --border: 230 20% 88%;
+    --input: 230 20% 88%;
+    --ring: 212 80% 48%;
   }
 }
 
