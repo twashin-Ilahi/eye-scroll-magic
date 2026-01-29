@@ -185,16 +185,44 @@ function AnimatedFace({
         </mesh>
       </group>
 
-      {/* Smile - thin white curved arc like the reference */}
-      <mesh position={[0, -0.28, 0.88]} rotation={[0.15, 0, 0]}>
-        <torusGeometry args={[0.28, 0.025, 8, 32, Math.PI]} />
-        <meshStandardMaterial 
-          color="#e8e8e8" 
-          roughness={0.2}
-          emissive="#ffffff"
-          emissiveIntensity={0.1}
-        />
-      </mesh>
+      {/* Smile - friendly modern U-shaped smile */}
+      <group position={[0, -0.32, 0.85]}>
+        {/* Main smile curve - wider U shape */}
+        <mesh rotation={[0.2, 0, 0]}>
+          <torusGeometry args={[0.22, 0.035, 16, 32, Math.PI]} />
+          <meshStandardMaterial 
+            color="#e8e8e8" 
+            roughness={0.15}
+            emissive="#ffffff"
+            emissiveIntensity={0.12}
+          />
+        </mesh>
+        {/* Smile highlight - glossy reflection matching eyes */}
+        <mesh position={[0, -0.08, 0.04]} rotation={[0.3, 0, 0]}>
+          <torusGeometry args={[0.18, 0.015, 8, 24, Math.PI * 0.6]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.5} />
+        </mesh>
+        {/* Left smile corner softener */}
+        <mesh position={[-0.21, 0.02, 0.02]}>
+          <sphereGeometry args={[0.04, 16, 16]} />
+          <meshStandardMaterial 
+            color="#e8e8e8" 
+            roughness={0.15}
+            emissive="#ffffff"
+            emissiveIntensity={0.1}
+          />
+        </mesh>
+        {/* Right smile corner softener */}
+        <mesh position={[0.21, 0.02, 0.02]}>
+          <sphereGeometry args={[0.04, 16, 16]} />
+          <meshStandardMaterial 
+            color="#e8e8e8" 
+            roughness={0.15}
+            emissive="#ffffff"
+            emissiveIntensity={0.1}
+          />
+        </mesh>
+      </group>
     </group>
   );
 }
