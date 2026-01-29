@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Apple, Monitor, ChevronDown } from "lucide-react";
+import { Face3DScene } from "./Face3DScene";
 import { Suspense } from "react";
-import naveyeKitty from "@/assets/naveye-kitty-hero.png";
 
 export const HeroSection = () => {
   return (
@@ -129,31 +129,20 @@ export const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Kitty Hero Illustration - Right Side */}
+      {/* 3D Face Scene - Right Side */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, delay: 0.3 }}
-        className="relative z-10 flex-1 w-full max-w-2xl flex items-center justify-center"
+        className="relative z-10 flex-1 w-full h-[400px] md:h-[500px] lg:h-[600px] max-w-2xl"
       >
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="relative"
-        >
-          {/* Glow effect behind kitty */}
-          <div 
-            className="absolute inset-0 blur-3xl opacity-40"
-            style={{
-              background: "radial-gradient(circle, rgba(74, 144, 226, 0.5) 0%, rgba(155, 89, 182, 0.3) 50%, transparent 70%)"
-            }}
-          />
-          <img 
-            src={naveyeKitty} 
-            alt="Cute cat using NavEye to scroll with eyes" 
-            className="relative z-10 w-full max-w-xl h-auto drop-shadow-2xl"
-          />
-        </motion.div>
+        <Suspense fallback={
+          <div className="w-full h-full flex items-center justify-center">
+            <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+          </div>
+        }>
+          <Face3DScene />
+        </Suspense>
       </motion.div>
 
       {/* Scroll indicator */}
