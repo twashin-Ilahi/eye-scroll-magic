@@ -148,14 +148,25 @@ function SimpleEmojiFace({
         <meshBasicMaterial color="#4A90E2" transparent opacity={0.03} side={THREE.BackSide} />
       </mesh>
 
-      {/* Main face sphere - matte dark, no reflections */}
+      {/* Main face sphere - matte front, reflective sides */}
       <mesh>
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial 
           color="#0a0e1a"
-          roughness={0.9}
-          metalness={0}
-          envMapIntensity={0}
+          roughness={0.4}
+          metalness={0.3}
+          envMapIntensity={0.5}
+        />
+      </mesh>
+      
+      {/* Rim light effect - back/side glow */}
+      <mesh>
+        <sphereGeometry args={[1.02, 64, 64]} />
+        <meshBasicMaterial 
+          color="#4A90E2" 
+          transparent 
+          opacity={0.12} 
+          side={THREE.BackSide}
         />
       </mesh>
 
