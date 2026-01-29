@@ -2,11 +2,20 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Apple, Monitor } from "lucide-react";
 import { FloatingShapes } from "./FloatingShapes";
+import { EyeScrollScene } from "./EyeScrollScene";
+import { Suspense } from "react";
 
 export const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-16 px-6">
       <FloatingShapes />
+      
+      {/* 3D Eye Scroll Scene */}
+      <div className="absolute inset-0 z-0">
+        <Suspense fallback={null}>
+          <EyeScrollScene />
+        </Suspense>
+      </div>
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         {/* Badge */}
