@@ -167,78 +167,58 @@ function AnimatedFace({
         />
       </mesh>
 
-      {/* Left Eye - simple white oval */}
+      {/* Left Eye - round white circle */}
       <group ref={leftEyeGroupRef} position={[-0.32, 0.12, 0.88]}>
-        <mesh scale={[1, 1.3, 0.5]}>
+        <mesh>
           <sphereGeometry args={[0.18, 32, 32]} />
           <meshStandardMaterial 
-            color="#e8e8e8" 
-            roughness={0.2}
+            color="#ffffff" 
+            roughness={0.1}
             emissive="#ffffff"
-            emissiveIntensity={0.15}
+            emissiveIntensity={0.2}
           />
         </mesh>
         {/* Subtle highlight */}
-        <mesh position={[0.04, 0.06, 0.12]}>
-          <circleGeometry args={[0.025, 16]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.7} />
+        <mesh position={[0.05, 0.05, 0.15]}>
+          <circleGeometry args={[0.04, 16]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
         </mesh>
       </group>
 
-      {/* Right Eye - simple white oval */}
+      {/* Right Eye - round white circle */}
       <group ref={rightEyeGroupRef} position={[0.32, 0.12, 0.88]}>
-        <mesh scale={[1, 1.3, 0.5]}>
+        <mesh>
           <sphereGeometry args={[0.18, 32, 32]} />
           <meshStandardMaterial 
-            color="#e8e8e8" 
-            roughness={0.2}
+            color="#ffffff" 
+            roughness={0.1}
             emissive="#ffffff"
-            emissiveIntensity={0.15}
+            emissiveIntensity={0.2}
           />
         </mesh>
         {/* Subtle highlight */}
-        <mesh position={[0.04, 0.06, 0.12]}>
-          <circleGeometry args={[0.025, 16]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.7} />
+        <mesh position={[0.05, 0.05, 0.15]}>
+          <circleGeometry args={[0.04, 16]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.8} />
         </mesh>
       </group>
 
-      {/* Smile - friendly modern U-shaped smile */}
-      <group ref={smileGroupRef} position={[0, -0.32, 0.85]}>
-        {/* Main smile curve - wider U shape */}
-        <mesh rotation={[0.2, 0, 0]}>
-          <torusGeometry args={[0.22, 0.035, 16, 32, Math.PI]} />
+      {/* Smile - white U-shaped smile */}
+      <group ref={smileGroupRef} position={[0, -0.32, 0.88]}>
+        {/* Main smile curve - clear white U shape */}
+        <mesh rotation={[0.15, 0, 0]}>
+          <torusGeometry args={[0.2, 0.04, 16, 32, Math.PI]} />
           <meshStandardMaterial 
-            color="#e8e8e8" 
-            roughness={0.15}
+            color="#ffffff" 
+            roughness={0.1}
             emissive="#ffffff"
-            emissiveIntensity={0.12}
+            emissiveIntensity={0.2}
           />
         </mesh>
-        {/* Smile highlight - glossy reflection matching eyes */}
-        <mesh position={[0, -0.08, 0.04]} rotation={[0.3, 0, 0]}>
-          <torusGeometry args={[0.18, 0.015, 8, 24, Math.PI * 0.6]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0.5} />
-        </mesh>
-        {/* Left smile corner softener */}
-        <mesh position={[-0.21, 0.02, 0.02]}>
-          <sphereGeometry args={[0.04, 16, 16]} />
-          <meshStandardMaterial 
-            color="#e8e8e8" 
-            roughness={0.15}
-            emissive="#ffffff"
-            emissiveIntensity={0.1}
-          />
-        </mesh>
-        {/* Right smile corner softener */}
-        <mesh position={[0.21, 0.02, 0.02]}>
-          <sphereGeometry args={[0.04, 16, 16]} />
-          <meshStandardMaterial 
-            color="#e8e8e8" 
-            roughness={0.15}
-            emissive="#ffffff"
-            emissiveIntensity={0.1}
-          />
+        {/* Smile highlight */}
+        <mesh position={[0, -0.06, 0.03]} rotation={[0.2, 0, 0]}>
+          <torusGeometry args={[0.15, 0.015, 8, 24, Math.PI * 0.7]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
         </mesh>
       </group>
     </group>
