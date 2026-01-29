@@ -74,7 +74,7 @@ function ParticleFlow({
   );
 }
 
-// Hello Kitty style face - exact match to reference
+// Hello Kitty style face - realistic 3D render
 function AnimatedKitty({ 
   leftEyeClosed, 
   rightEyeClosed 
@@ -90,186 +90,261 @@ function AnimatedKitty({
 
   useFrame(({ clock, mouse }) => {
     if (faceRef.current) {
-      faceRef.current.rotation.y = Math.sin(clock.getElapsedTime() * 0.3) * 0.08 + mouse.x * 0.08;
-      faceRef.current.rotation.x = Math.cos(clock.getElapsedTime() * 0.2) * 0.04 + mouse.y * 0.04;
+      faceRef.current.rotation.y = Math.sin(clock.getElapsedTime() * 0.25) * 0.06 + mouse.x * 0.06;
+      faceRef.current.rotation.x = Math.cos(clock.getElapsedTime() * 0.18) * 0.03 + mouse.y * 0.03;
     }
 
-    // Animate left eye closing/opening
     if (leftEyeGroupRef.current) {
-      const targetScale = leftEyeClosed ? 0.1 : 1;
-      leftEyeScaleRef.current = THREE.MathUtils.lerp(leftEyeScaleRef.current, targetScale, 0.12);
+      const targetScale = leftEyeClosed ? 0.08 : 1;
+      leftEyeScaleRef.current = THREE.MathUtils.lerp(leftEyeScaleRef.current, targetScale, 0.1);
       leftEyeGroupRef.current.scale.y = leftEyeScaleRef.current;
     }
     
-    // Animate right eye closing/opening
     if (rightEyeGroupRef.current) {
-      const targetScale = rightEyeClosed ? 0.1 : 1;
-      rightEyeScaleRef.current = THREE.MathUtils.lerp(rightEyeScaleRef.current, targetScale, 0.12);
+      const targetScale = rightEyeClosed ? 0.08 : 1;
+      rightEyeScaleRef.current = THREE.MathUtils.lerp(rightEyeScaleRef.current, targetScale, 0.1);
       rightEyeGroupRef.current.scale.y = rightEyeScaleRef.current;
     }
   });
 
   return (
     <group ref={faceRef} position={[0, 0, 0]}>
-      {/* Outer glow - blue/purple themed */}
-      <mesh scale={[1.35, 1.15, 1]}>
-        <sphereGeometry args={[1.08, 64, 64]} />
-        <meshBasicMaterial color="#4A90E2" transparent opacity={0.12} side={THREE.BackSide} />
+      {/* Soft ambient glow */}
+      <mesh scale={[1.38, 1.18, 1.05]}>
+        <sphereGeometry args={[1.06, 64, 64]} />
+        <meshBasicMaterial color="#4A90E2" transparent opacity={0.06} side={THREE.BackSide} />
       </mesh>
-      <mesh scale={[1.35, 1.15, 1]}>
-        <sphereGeometry args={[1.05, 64, 64]} />
-        <meshBasicMaterial color="#9B59B6" transparent opacity={0.08} side={THREE.BackSide} />
+      <mesh scale={[1.36, 1.16, 1.03]}>
+        <sphereGeometry args={[1.04, 64, 64]} />
+        <meshBasicMaterial color="#9B59B6" transparent opacity={0.04} side={THREE.BackSide} />
       </mesh>
 
-      {/* Backlighting for glow effect */}
-      <pointLight position={[0, 0, -1]} intensity={0.8} color="#4A90E2" distance={3} />
-      <pointLight position={[-1.5, 0, 0]} intensity={0.4} color="#9B59B6" distance={2} />
-      <pointLight position={[1.5, 0, 0]} intensity={0.4} color="#4A90E2" distance={2} />
+      {/* Realistic lighting setup */}
+      <pointLight position={[2, 2, 3]} intensity={1.2} color="#ffffff" distance={8} />
+      <pointLight position={[-2, 1, 2]} intensity={0.6} color="#e8e8ff" distance={6} />
+      <pointLight position={[0, -1, 2]} intensity={0.3} color="#fff5f0" distance={4} />
+      <pointLight position={[0, 0, -2]} intensity={0.4} color="#4A90E2" distance={5} />
 
-      {/* HEAD - wider oval shape (Hello Kitty proportions) */}
-      <mesh scale={[1.3, 1.1, 1]}>
+      {/* HEAD - smooth matte ceramic finish */}
+      <mesh scale={[1.32, 1.12, 0.95]}>
+        <sphereGeometry args={[1, 128, 128]} />
+        <meshStandardMaterial
+          color="#fafafa"
+          roughness={0.35}
+          metalness={0.0}
+          envMapIntensity={0.3}
+        />
+      </mesh>
+      
+      {/* Subtle subsurface scattering simulation layer */}
+      <mesh scale={[1.31, 1.11, 0.94]}>
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial
-          color="#ffffff"
-          roughness={0.25}
-          metalness={0.05}
-          emissive="#ffffff"
-          emissiveIntensity={0.15}
+          color="#fff8f5"
+          roughness={0.5}
+          metalness={0.0}
+          transparent
+          opacity={0.15}
         />
       </mesh>
 
-      {/* LEFT EAR - small pointed */}
-      <group position={[-0.75, 0.85, 0]}>
-        <mesh rotation={[0, 0, 0.2]}>
-          <coneGeometry args={[0.28, 0.45, 32]} />
+      {/* LEFT EAR - organic rounded cone */}
+      <group position={[-0.78, 0.88, -0.05]}>
+        <mesh rotation={[0.15, 0.1, 0.25]}>
+          <coneGeometry args={[0.26, 0.5, 32]} />
+          <meshStandardMaterial
+            color="#fafafa"
+            roughness={0.35}
+            metalness={0.0}
+          />
+        </mesh>
+        {/* Ear highlight */}
+        <mesh rotation={[0.15, 0.1, 0.25]} position={[0.03, 0.08, 0.08]}>
+          <coneGeometry args={[0.12, 0.25, 16]} />
           <meshStandardMaterial
             color="#ffffff"
-            roughness={0.25}
-            metalness={0.05}
-            emissive="#ffffff"
-            emissiveIntensity={0.15}
+            roughness={0.4}
+            metalness={0.0}
+            transparent
+            opacity={0.3}
           />
         </mesh>
       </group>
 
-      {/* RIGHT EAR - small pointed */}
-      <group position={[0.75, 0.85, 0]}>
-        <mesh rotation={[0, 0, -0.2]}>
-          <coneGeometry args={[0.28, 0.45, 32]} />
+      {/* RIGHT EAR */}
+      <group position={[0.78, 0.88, -0.05]}>
+        <mesh rotation={[0.15, -0.1, -0.25]}>
+          <coneGeometry args={[0.26, 0.5, 32]} />
+          <meshStandardMaterial
+            color="#fafafa"
+            roughness={0.35}
+            metalness={0.0}
+          />
+        </mesh>
+        <mesh rotation={[0.15, -0.1, -0.25]} position={[-0.03, 0.08, 0.08]}>
+          <coneGeometry args={[0.12, 0.25, 16]} />
           <meshStandardMaterial
             color="#ffffff"
-            roughness={0.25}
-            metalness={0.05}
-            emissive="#ffffff"
-            emissiveIntensity={0.15}
+            roughness={0.4}
+            metalness={0.0}
+            transparent
+            opacity={0.3}
           />
         </mesh>
       </group>
 
-      {/* PINK BOW - on right ear */}
-      <group position={[0.95, 0.75, 0.25]} rotation={[0, 0, -0.3]}>
-        {/* Bow center */}
+      {/* PINK BOW - glossy plastic finish */}
+      <group position={[1.0, 0.78, 0.2]} rotation={[0.1, -0.2, -0.35]}>
+        {/* Bow center knot */}
         <mesh>
-          <sphereGeometry args={[0.12, 16, 16]} />
+          <sphereGeometry args={[0.11, 32, 32]} />
           <meshStandardMaterial 
             color="#E91E8C" 
-            roughness={0.3}
-            emissive="#E91E8C"
-            emissiveIntensity={0.4}
-          />
-        </mesh>
-        {/* Left loop */}
-        <mesh position={[-0.18, 0.05, 0]} rotation={[0, 0, 0.4]} scale={[1, 0.7, 0.5]}>
-          <sphereGeometry args={[0.18, 16, 16]} />
-          <meshStandardMaterial 
-            color="#E91E8C" 
-            roughness={0.3}
-            emissive="#E91E8C"
-            emissiveIntensity={0.4}
-          />
-        </mesh>
-        {/* Right loop */}
-        <mesh position={[0.18, 0.05, 0]} rotation={[0, 0, -0.4]} scale={[1, 0.7, 0.5]}>
-          <sphereGeometry args={[0.18, 16, 16]} />
-          <meshStandardMaterial 
-            color="#E91E8C" 
-            roughness={0.3}
-            emissive="#E91E8C"
-            emissiveIntensity={0.4}
-          />
-        </mesh>
-      </group>
-
-      {/* LEFT EYE - simple black oval */}
-      <group ref={leftEyeGroupRef} position={[-0.38, 0.05, 0.95]}>
-        <mesh scale={[0.8, 1.1, 0.5]}>
-          <sphereGeometry args={[0.14, 32, 32]} />
-          <meshStandardMaterial 
-            color="#1a1a1a" 
-            roughness={0.2}
+            roughness={0.15}
             metalness={0.1}
+            envMapIntensity={0.8}
           />
         </mesh>
-      </group>
-
-      {/* RIGHT EYE - simple black oval */}
-      <group ref={rightEyeGroupRef} position={[0.38, 0.05, 0.95]}>
-        <mesh scale={[0.8, 1.1, 0.5]}>
-          <sphereGeometry args={[0.14, 32, 32]} />
+        {/* Left bow loop */}
+        <mesh position={[-0.2, 0.04, 0]} rotation={[0.1, 0.2, 0.5]} scale={[1.1, 0.65, 0.45]}>
+          <sphereGeometry args={[0.19, 32, 32]} />
           <meshStandardMaterial 
-            color="#1a1a1a" 
-            roughness={0.2}
+            color="#E91E8C" 
+            roughness={0.15}
             metalness={0.1}
+            envMapIntensity={0.8}
           />
         </mesh>
-      </group>
-
-      {/* NOSE - yellow oval */}
-      <mesh position={[0, -0.18, 1.02]} scale={[1, 0.8, 0.5]}>
-        <sphereGeometry args={[0.09, 32, 32]} />
-        <meshStandardMaterial 
-          color="#FFD700" 
-          roughness={0.3}
-          emissive="#FFD700"
-          emissiveIntensity={0.3}
-        />
-      </mesh>
-
-      {/* LEFT WHISKERS - 3 lines angled outward */}
-      <group position={[-0.65, -0.05, 0.75]}>
-        {/* Top whisker */}
-        <mesh position={[0, 0.12, 0]} rotation={[0, 0.3, 0.25]}>
-          <cylinderGeometry args={[0.012, 0.008, 0.55, 8]} />
-          <meshStandardMaterial color="#4a5568" roughness={0.4} />
+        {/* Right bow loop */}
+        <mesh position={[0.2, 0.04, 0]} rotation={[0.1, -0.2, -0.5]} scale={[1.1, 0.65, 0.45]}>
+          <sphereGeometry args={[0.19, 32, 32]} />
+          <meshStandardMaterial 
+            color="#E91E8C" 
+            roughness={0.15}
+            metalness={0.1}
+            envMapIntensity={0.8}
+          />
         </mesh>
-        {/* Middle whisker */}
-        <mesh rotation={[0, 0.2, 0]}>
-          <cylinderGeometry args={[0.012, 0.008, 0.6, 8]} />
-          <meshStandardMaterial color="#4a5568" roughness={0.4} />
-        </mesh>
-        {/* Bottom whisker */}
-        <mesh position={[0, -0.12, 0]} rotation={[0, 0.3, -0.25]}>
-          <cylinderGeometry args={[0.012, 0.008, 0.55, 8]} />
-          <meshStandardMaterial color="#4a5568" roughness={0.4} />
+        {/* Bow highlight */}
+        <mesh position={[-0.12, 0.1, 0.1]} scale={[0.5, 0.3, 0.3]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshBasicMaterial color="#ff69b4" transparent opacity={0.4} />
         </mesh>
       </group>
 
-      {/* RIGHT WHISKERS - 3 lines angled outward */}
-      <group position={[0.65, -0.05, 0.75]}>
-        {/* Top whisker */}
-        <mesh position={[0, 0.12, 0]} rotation={[0, -0.3, -0.25]}>
-          <cylinderGeometry args={[0.012, 0.008, 0.55, 8]} />
-          <meshStandardMaterial color="#4a5568" roughness={0.4} />
+      {/* LEFT EYE - deep black with subtle reflection */}
+      <group ref={leftEyeGroupRef} position={[-0.36, 0.02, 0.88]}>
+        {/* Eye socket shadow */}
+        <mesh position={[0, 0, -0.02]} scale={[0.95, 1.2, 0.3]}>
+          <sphereGeometry args={[0.16, 32, 32]} />
+          <meshStandardMaterial 
+            color="#e8e8e8" 
+            roughness={0.5}
+            transparent
+            opacity={0.3}
+          />
         </mesh>
-        {/* Middle whisker */}
-        <mesh rotation={[0, -0.2, 0]}>
-          <cylinderGeometry args={[0.012, 0.008, 0.6, 8]} />
-          <meshStandardMaterial color="#4a5568" roughness={0.4} />
+        {/* Main eye */}
+        <mesh scale={[0.85, 1.15, 0.4]}>
+          <sphereGeometry args={[0.13, 48, 48]} />
+          <meshStandardMaterial 
+            color="#0a0a0a" 
+            roughness={0.1}
+            metalness={0.2}
+            envMapIntensity={1.2}
+          />
         </mesh>
-        {/* Bottom whisker */}
-        <mesh position={[0, -0.12, 0]} rotation={[0, -0.3, 0.25]}>
-          <cylinderGeometry args={[0.012, 0.008, 0.55, 8]} />
-          <meshStandardMaterial color="#4a5568" roughness={0.4} />
+        {/* Eye highlight - top */}
+        <mesh position={[0.02, 0.06, 0.06]} scale={[0.7, 0.5, 0.3]}>
+          <sphereGeometry args={[0.03, 16, 16]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
+        </mesh>
+      </group>
+
+      {/* RIGHT EYE */}
+      <group ref={rightEyeGroupRef} position={[0.36, 0.02, 0.88]}>
+        <mesh position={[0, 0, -0.02]} scale={[0.95, 1.2, 0.3]}>
+          <sphereGeometry args={[0.16, 32, 32]} />
+          <meshStandardMaterial 
+            color="#e8e8e8" 
+            roughness={0.5}
+            transparent
+            opacity={0.3}
+          />
+        </mesh>
+        <mesh scale={[0.85, 1.15, 0.4]}>
+          <sphereGeometry args={[0.13, 48, 48]} />
+          <meshStandardMaterial 
+            color="#0a0a0a" 
+            roughness={0.1}
+            metalness={0.2}
+            envMapIntensity={1.2}
+          />
+        </mesh>
+        <mesh position={[0.02, 0.06, 0.06]} scale={[0.7, 0.5, 0.3]}>
+          <sphereGeometry args={[0.03, 16, 16]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
+        </mesh>
+      </group>
+
+      {/* NOSE - warm yellow/gold with glossy finish */}
+      <group position={[0, -0.16, 0.92]}>
+        {/* Nose shadow */}
+        <mesh position={[0, -0.01, -0.02]} scale={[1.2, 1, 0.4]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshStandardMaterial 
+            color="#e8e0d0" 
+            roughness={0.5}
+            transparent
+            opacity={0.2}
+          />
+        </mesh>
+        {/* Main nose */}
+        <mesh scale={[1.05, 0.85, 0.45]}>
+          <sphereGeometry args={[0.085, 48, 48]} />
+          <meshStandardMaterial 
+            color="#F5C518" 
+            roughness={0.2}
+            metalness={0.15}
+            envMapIntensity={0.6}
+          />
+        </mesh>
+        {/* Nose highlight */}
+        <mesh position={[0.02, 0.02, 0.04]}>
+          <sphereGeometry args={[0.025, 16, 16]} />
+          <meshBasicMaterial color="#fffde0" transparent opacity={0.7} />
+        </mesh>
+      </group>
+
+      {/* LEFT WHISKERS - organic tapered strands */}
+      <group position={[-0.58, -0.08, 0.7]}>
+        <mesh position={[-0.15, 0.1, 0.05]} rotation={[0, 0.5, 0.2]}>
+          <cylinderGeometry args={[0.014, 0.006, 0.52, 12]} />
+          <meshStandardMaterial color="#5a6270" roughness={0.6} metalness={0.1} />
+        </mesh>
+        <mesh position={[-0.18, 0, 0.03]} rotation={[0, 0.4, 0.05]}>
+          <cylinderGeometry args={[0.014, 0.006, 0.58, 12]} />
+          <meshStandardMaterial color="#5a6270" roughness={0.6} metalness={0.1} />
+        </mesh>
+        <mesh position={[-0.15, -0.1, 0.05]} rotation={[0, 0.5, -0.15]}>
+          <cylinderGeometry args={[0.014, 0.006, 0.52, 12]} />
+          <meshStandardMaterial color="#5a6270" roughness={0.6} metalness={0.1} />
+        </mesh>
+      </group>
+
+      {/* RIGHT WHISKERS */}
+      <group position={[0.58, -0.08, 0.7]}>
+        <mesh position={[0.15, 0.1, 0.05]} rotation={[0, -0.5, -0.2]}>
+          <cylinderGeometry args={[0.014, 0.006, 0.52, 12]} />
+          <meshStandardMaterial color="#5a6270" roughness={0.6} metalness={0.1} />
+        </mesh>
+        <mesh position={[0.18, 0, 0.03]} rotation={[0, -0.4, -0.05]}>
+          <cylinderGeometry args={[0.014, 0.006, 0.58, 12]} />
+          <meshStandardMaterial color="#5a6270" roughness={0.6} metalness={0.1} />
+        </mesh>
+        <mesh position={[0.15, -0.1, 0.05]} rotation={[0, -0.5, 0.15]}>
+          <cylinderGeometry args={[0.014, 0.006, 0.52, 12]} />
+          <meshStandardMaterial color="#5a6270" roughness={0.6} metalness={0.1} />
         </mesh>
       </group>
     </group>
@@ -392,12 +467,13 @@ function Scene() {
 
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[5, 5, 5]} intensity={0.6} color="#ffffff" />
-      <pointLight position={[-3, 2, 3]} intensity={0.8} color="#4A90E2" />
-      <pointLight position={[3, 2, 3]} intensity={0.8} color="#9B59B6" />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[5, 5, 5]} intensity={0.8} color="#ffffff" castShadow />
+      <directionalLight position={[-3, 2, 4]} intensity={0.4} color="#e8e8ff" />
+      <pointLight position={[-3, 2, 3]} intensity={0.5} color="#4A90E2" />
+      <pointLight position={[3, 2, 3]} intensity={0.5} color="#9B59B6" />
 
-      <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
+      <Float speed={1.2} rotationIntensity={0.08} floatIntensity={0.25}>
         <AnimatedKitty leftEyeClosed={leftEyeClosed} rightEyeClosed={rightEyeClosed} />
       </Float>
 
@@ -409,7 +485,7 @@ function Scene() {
         <ParticleFlow active={rightEyeClosed} direction="up" color="#9B59B6" />
       </group>
 
-      <Environment preset="night" />
+      <Environment preset="studio" />
     </>
   );
 }
