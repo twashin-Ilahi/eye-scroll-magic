@@ -148,14 +148,14 @@ function SimpleEmojiFace({
         <meshBasicMaterial color="#4A90E2" transparent opacity={0.03} side={THREE.BackSide} />
       </mesh>
 
-      {/* Main face sphere - with reflective shine */}
+      {/* Main face sphere - reflective but softer front */}
       <mesh>
         <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial 
           color="#0a0e1a"
-          roughness={0.3}
-          metalness={0.5}
-          envMapIntensity={0.8}
+          roughness={0.55}
+          metalness={0.35}
+          envMapIntensity={0.5}
         />
       </mesh>
       
