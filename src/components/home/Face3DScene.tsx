@@ -203,10 +203,10 @@ function AnimatedFace({
         </mesh>
       </group>
 
-      {/* Smile - white U-shaped smile - positioned in front of face */}
+      {/* Smile - white U-shaped smile - flipped to curve upward */}
       <group ref={smileGroupRef} position={[0, -0.35, 0.95]}>
-        {/* Main smile curve - clear white U shape */}
-        <mesh rotation={[0.3, 0, 0]}>
+        {/* Main smile curve - rotated to show as happy smile */}
+        <mesh rotation={[0.3, 0, Math.PI]}>
           <torusGeometry args={[0.18, 0.045, 16, 32, Math.PI]} />
           <meshStandardMaterial 
             color="#ffffff" 
@@ -216,7 +216,7 @@ function AnimatedFace({
           />
         </mesh>
         {/* Smile highlight for glossy look */}
-        <mesh position={[0, -0.05, 0.04]} rotation={[0.35, 0, 0]}>
+        <mesh position={[0, 0.05, 0.04]} rotation={[0.25, 0, Math.PI]}>
           <torusGeometry args={[0.14, 0.02, 8, 24, Math.PI * 0.6]} />
           <meshBasicMaterial color="#ffffff" transparent opacity={0.7} />
         </mesh>
