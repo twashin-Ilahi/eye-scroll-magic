@@ -1,10 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Apple, Monitor, ChevronDown } from "lucide-react";
+import { Apple, Monitor, ChevronDown, Users } from "lucide-react";
 import { Face3DScene } from "./Face3DScene";
 import { Suspense } from "react";
+import { useDownloadStats } from "@/hooks/useDownloadStats";
 
 export const HeroSection = () => {
+  const { data: downloadStats } = useDownloadStats();
+  
   return (
     <section className="relative min-h-screen flex flex-col lg:flex-row items-center justify-center overflow-hidden pt-24 pb-16 px-6 gap-8">
       {/* Gradient overlay */}
@@ -126,6 +129,23 @@ export const HeroSection = () => {
             <div className="w-2 h-2 rounded-full bg-accent" />
             <span>Open Source</span>
           </div>
+        </motion.div>
+
+        {/* Trusted by users */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
+          className="mt-4 flex items-center justify-center lg:justify-start gap-2 text-sm text-muted-foreground"
+        >
+          <Users className="w-4 h-4 text-primary" />
+          <span>
+            Trusted by{" "}
+            <span className="font-semibold text-foreground">
+              {downloadStats?.total?.toLocaleString() ?? "..."}
+            </span>{" "}
+            users worldwide.
+          </span>
         </motion.div>
       </div>
 
