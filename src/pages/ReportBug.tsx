@@ -16,6 +16,7 @@ import {
 import { motion } from "framer-motion";
 import { Bug, Send, AlertTriangle, Monitor, Smartphone, CheckCircle, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const ReportBug = () => {
   const { toast } = useToast();
@@ -37,25 +38,46 @@ const ReportBug = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "Bug Report Submitted!",
-      description: "Thank you for helping us improve NavEye. We'll look into this issue.",
-    });
-    
-    setFormData({
-      title: "",
-      category: "",
-      platform: "",
-      description: "",
-      stepsToReproduce: "",
-      expectedBehavior: "",
-      actualBehavior: "",
-      email: "",
-    });
-    setIsSubmitting(false);
+    try {
+      const { error } = await supabase.from("bug_reports").insert({
+        report_type: "detailed",
+        title: formData.title,
+        category: formData.category,
+        platform: formData.platform,
+        description: formData.description,
+        steps_to_reproduce: formData.stepsToReproduce,
+        expected_behavior: formData.expectedBehavior,
+        actual_behavior: formData.actualBehavior,
+        email: formData.email || null,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Bug Report Submitted!",
+        description: "Thank you for helping us improve NavEye. We'll look into this issue.",
+      });
+      
+      setFormData({
+        title: "",
+        category: "",
+        platform: "",
+        description: "",
+        stepsToReproduce: "",
+        expectedBehavior: "",
+        actualBehavior: "",
+        email: "",
+      });
+    } catch (error) {
+      console.error("Error submitting bug report:", error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your report. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleQuickSubmit = async (e: React.FormEvent) => {
@@ -64,16 +86,30 @@ const ReportBug = () => {
     
     setIsQuickSubmitting(true);
     
-    // Simulate submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "Quick Note Sent!",
-      description: "Thanks for the quick feedback. We appreciate it!",
-    });
-    
-    setQuickNote("");
-    setIsQuickSubmitting(false);
+    try {
+      const { error } = await supabase.from("bug_reports").insert({
+        report_type: "quick",
+        quick_note: quickNote.trim(),
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Quick Note Sent!",
+        description: "Thanks for the quick feedback. We appreciate it!",
+      });
+      
+      setQuickNote("");
+    } catch (error) {
+      console.error("Error submitting quick note:", error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your note. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsQuickSubmitting(false);
+    }
   };
 
   const categories = [
