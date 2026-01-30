@@ -215,10 +215,15 @@ const AdminBugReports = () => {
                 <p className="text-muted-foreground">Manage bug reports</p>
               </div>
             </div>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button onClick={() => navigate("/admin/blog")} variant="outline">
+                Blog Posts
+              </Button>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </motion.div>
 
           {/* Stats */}
