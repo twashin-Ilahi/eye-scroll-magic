@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      bug_reports: {
+        Row: {
+          actual_behavior: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          expected_behavior: string | null
+          id: string
+          platform: string | null
+          quick_note: string | null
+          report_type: string
+          steps_to_reproduce: string | null
+          title: string | null
+        }
+        Insert: {
+          actual_behavior?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          expected_behavior?: string | null
+          id?: string
+          platform?: string | null
+          quick_note?: string | null
+          report_type: string
+          steps_to_reproduce?: string | null
+          title?: string | null
+        }
+        Update: {
+          actual_behavior?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          expected_behavior?: string | null
+          id?: string
+          platform?: string | null
+          quick_note?: string | null
+          report_type?: string
+          steps_to_reproduce?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
       downloads: {
         Row: {
           downloaded_at: string
