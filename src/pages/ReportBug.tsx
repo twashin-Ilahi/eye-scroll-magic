@@ -14,12 +14,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { Bug, Send, AlertTriangle, Monitor, Smartphone, CheckCircle } from "lucide-react";
+import { Bug, Send, AlertTriangle, Monitor, Smartphone, CheckCircle, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const ReportBug = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isQuickSubmitting, setIsQuickSubmitting] = useState(false);
+  const [quickNote, setQuickNote] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -54,6 +56,24 @@ const ReportBug = () => {
       email: "",
     });
     setIsSubmitting(false);
+  };
+
+  const handleQuickSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickNote.trim()) return;
+    
+    setIsQuickSubmitting(true);
+    
+    // Simulate submission
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    toast({
+      title: "Quick Note Sent!",
+      description: "Thanks for the quick feedback. We appreciate it!",
+    });
+    
+    setQuickNote("");
+    setIsQuickSubmitting(false);
   };
 
   const categories = [
@@ -105,11 +125,65 @@ const ReportBug = () => {
             </p>
           </motion.div>
 
-          {/* Tips Section */}
+          {/* Quick Bug Report Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
+            className="max-w-3xl mx-auto mb-8"
+          >
+            <div className="bg-primary/10 border border-primary/30 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">Quick Bug Report</h3>
+                  <p className="text-sm text-muted-foreground">Just want to leave a quick note? Drop it here.</p>
+                </div>
+              </div>
+              <form onSubmit={handleQuickSubmit} className="flex gap-3">
+                <Textarea
+                  placeholder="Describe the issue briefly... (e.g., 'Eye tracking stops working after 10 minutes')"
+                  value={quickNote}
+                  onChange={(e) => setQuickNote(e.target.value)}
+                  rows={2}
+                  className="bg-background/50 flex-1 resize-none"
+                />
+                <Button
+                  type="submit"
+                  disabled={isQuickSubmitting || !quickNote.trim()}
+                  className="self-end"
+                >
+                  {isQuickSubmitting ? (
+                    <CheckCircle className="w-5 h-5 animate-pulse" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </Button>
+              </form>
+            </div>
+          </motion.div>
+
+          {/* Divider */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="max-w-3xl mx-auto mb-8"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-border/50" />
+              <span className="text-sm text-muted-foreground">or provide more details below</span>
+              <div className="flex-1 h-px bg-border/50" />
+            </div>
+          </motion.div>
+
+          {/* Tips Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             className="max-w-3xl mx-auto mb-12"
           >
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6">
@@ -128,11 +202,11 @@ const ReportBug = () => {
             </div>
           </motion.div>
 
-          {/* Form */}
+          {/* Detailed Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
             className="max-w-3xl mx-auto"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
