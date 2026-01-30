@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Eye, Github, Mail } from "lucide-react";
+import { Github, Mail } from "lucide-react";
+import naveyeLogo from "@/assets/naveye-logo.png";
 
 export const Footer = () => {
   return (
@@ -9,8 +10,8 @@ export const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-2">
             <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-                <Eye className="w-5 h-5 text-primary" />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+                <img src={naveyeLogo} alt="NavEye Logo" className="w-10 h-10 object-contain" />
               </div>
               <span className="text-xl font-bold">NavEye</span>
             </Link>
