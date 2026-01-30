@@ -84,6 +84,7 @@ function SimpleEmojiFace({
   const faceRef = useRef<THREE.Group>(null);
   const leftEyeRef = useRef<THREE.Group>(null);
   const rightEyeRef = useRef<THREE.Group>(null);
+  const smileRef = useRef<THREE.Group>(null);
   const glowRef1 = useRef<THREE.Mesh>(null);
   const glowRef2 = useRef<THREE.Mesh>(null);
   const glowRef3 = useRef<THREE.Mesh>(null);
@@ -129,6 +130,14 @@ function SimpleEmojiFace({
       const targetScale = rightEyeClosed ? 0.1 : 1;
       rightEyeScaleRef.current = THREE.MathUtils.lerp(rightEyeScaleRef.current, targetScale, 0.12);
       rightEyeRef.current.scale.y = rightEyeScaleRef.current;
+    }
+
+    // Animate smile - subtle breathing/smiling motion
+    if (smileRef.current) {
+      const smileScale = 1 + Math.sin(time * 0.8) * 0.08;
+      const smileY = -0.28 + Math.sin(time * 1.2) * 0.015;
+      smileRef.current.scale.set(smileScale, 1 + Math.sin(time * 0.6) * 0.1, 1);
+      smileRef.current.position.y = smileY;
     }
   });
 
@@ -209,8 +218,8 @@ function SimpleEmojiFace({
         </mesh>
       </group>
 
-      {/* SMILE - Simple clean curve */}
-      <group position={[0, -0.28, 0.92]}>
+      {/* SMILE - Animated natural curve */}
+      <group ref={smileRef} position={[0, -0.28, 0.92]}>
         {/* Main smile curve */}
         <mesh rotation={[0.15, 0, Math.PI]}>
           <torusGeometry args={[0.18, 0.035, 16, 32, Math.PI]} />
