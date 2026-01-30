@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Apple, Monitor, Download, CheckCircle, ArrowDown } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingShapes } from "@/components/home/FloatingShapes";
 import { useDownloadStats, useRecordDownload } from "@/hooks/useDownloadStats";
+import { TermsDialog } from "@/components/download/TermsDialog";
 import { toast } from "sonner";
 
 const platforms = [
@@ -40,25 +42,47 @@ const platforms = [
 const DownloadPage = () => {
   const { data: stats, isLoading } = useDownloadStats();
   const recordDownload = useRecordDownload();
+  const [termsDialogOpen, setTermsDialogOpen] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState<{
+    id: "mac" | "windows";
+    name: string;
+    file: string;
+  } | null>(null);
 
-  const handleDownload = async (platform: "mac" | "windows", fileName: string) => {
+  const handleDownloadClick = (platform: typeof platforms[0]) => {
+    setSelectedPlatform({
+      id: platform.id,
+      name: platform.name,
+      file: platform.file,
+    });
+    setTermsDialogOpen(true);
+  };
+
+  const handleAgreeAndDownload = async () => {
+    if (!selectedPlatform) return;
+
     try {
-      await recordDownload.mutateAsync(platform);
+      await recordDownload.mutateAsync(selectedPlatform.id);
       toast.success(`Thank you for downloading NavEye!`, {
         description: "Your download will start shortly.",
       });
       
-      // Trigger download (placeholder file)
+      // Trigger download
       const link = document.createElement("a");
-      link.href = fileName;
-      link.download = fileName.split("/").pop() || "NavEye";
+      link.href = selectedPlatform.file;
+      link.download = selectedPlatform.file.split("/").pop() || "NavEye";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      
+      setTermsDialogOpen(false);
+      setSelectedPlatform(null);
     } catch (error) {
       toast.error("Download tracking failed, but your download should still work.");
       // Still attempt the download
-      window.open(fileName, "_blank");
+      window.open(selectedPlatform.file, "_blank");
+      setTermsDialogOpen(false);
+      setSelectedPlatform(null);
     }
   };
 
@@ -153,12 +177,12 @@ const DownloadPage = () => {
                 <motion.button
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => handleDownload(platform.id, platform.file)}
+                  onClick={() => handleDownloadClick(platform)}
                   disabled={recordDownload.isPending}
                   className="btn-primary w-full flex items-center justify-center gap-3"
                 >
                   <ArrowDown className="w-5 h-5" />
-                  {recordDownload.isPending ? "Processing..." : `Download for ${platform.name}`}
+                  Download for {platform.name}
                 </motion.button>
               </motion.div>
             ))}
@@ -180,6 +204,15 @@ const DownloadPage = () => {
           </motion.div>
         </div>
       </main>
+
+      {/* Terms Dialog */}
+      <TermsDialog
+        open={termsDialogOpen}
+        onOpenChange={setTermsDialogOpen}
+        onAgree={handleAgreeAndDownload}
+        platformName={selectedPlatform?.name || ""}
+        isLoading={recordDownload.isPending}
+      />
 
       <Footer />
     </div>
