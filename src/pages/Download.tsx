@@ -101,6 +101,14 @@ const DownloadPage = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
+            <motion.span
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/30 text-primary text-sm font-medium mb-4"
+            >
+              🚀 Beta Version
+            </motion.span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               Download <span className="gradient-text">NavEye</span>
             </h1>
