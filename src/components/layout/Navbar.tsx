@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import naveyeLogo from "@/assets/naveye-logo.png";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -29,9 +30,9 @@ export const Navbar = () => {
           <Link to="/" className="flex items-center gap-3 group">
             <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
-              className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
+              className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden"
             >
-              <Eye className="w-5 h-5 text-primary" />
+              <img src={naveyeLogo} alt="NavEye Logo" className="w-10 h-10 object-contain" />
             </motion.div>
             <span className="text-xl font-bold">NavEye</span>
           </Link>
