@@ -6,20 +6,13 @@ import { ParticleBackground } from "@/components/home/ParticleBackground";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, User, ArrowLeft } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-
-type BlogPost = {
-  id: string;
-  created_at: string;
-  title: string;
-  content: string;
-  author: string;
-  location: string | null;
-};
+import { db } from "@/integrations/firebase/client";
+import { doc, getDoc } from "firebase/firestore";
+import type { BlogPost as BlogPostType } from "@/integrations/firebase/types";
 
 const BlogPost = () => {
   const { id } = useParams();
-  const [post, setPost] = useState<BlogPost | null>(null);
+  const [post, setPost] = useState<(BlogPostType & { id: string }) | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -28,15 +21,16 @@ const BlogPost = () => {
 
   const fetchPost = async () => {
     try {
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*")
-        .eq("id", id)
-        .eq("published", true)
-        .single();
+      const postRef = doc(db, "blogPosts", id!);
+      const snapshot = await getDoc(postRef);
 
-      if (error) throw error;
-      setPost(data);
+      if (snapshot.exists()) {
+        const data = snapshot.data() as BlogPostType;
+        // Only show if published
+        if (data.published) {
+          setPost({ id: snapshot.id, ...data });
+        }
+      }
     } catch (error) {
       console.error("Error fetching post:", error);
     } finally {

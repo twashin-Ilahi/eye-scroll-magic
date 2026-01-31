@@ -30,23 +30,12 @@ import {
 import { motion } from "framer-motion";
 import { Bug, Shield, Trash2, Eye, RefreshCw, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { auth, db } from "@/integrations/firebase/client";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { collection, query, where, orderBy, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import type { BugReport as BugReportType } from "@/integrations/firebase/types";
 
-type BugReport = {
-  id: string;
-  created_at: string;
-  report_type: string;
-  quick_note: string | null;
-  title: string | null;
-  category: string | null;
-  platform: string | null;
-  description: string | null;
-  steps_to_reproduce: string | null;
-  expected_behavior: string | null;
-  actual_behavior: string | null;
-  email: string | null;
-  status: string;
-};
+type BugReport = BugReportType & { id: string };
 
 const AdminBugReports = () => {
   const { toast } = useToast();
@@ -56,29 +45,28 @@ const AdminBugReports = () => {
   const [bugReports, setBugReports] = useState<BugReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<BugReport | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    checkAdminAndFetch();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+        checkAdminAndFetch(user.uid);
+      } else {
+        navigate("/admin/login");
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
-  const checkAdminAndFetch = async () => {
+  const checkAdminAndFetch = async (userId: string) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        navigate("/admin/login");
-        return;
-      }
+      // Check admin role
+      const rolesRef = collection(db, "userRoles");
+      const roleQuery = query(rolesRef, where("user_id", "==", userId), where("role", "==", "admin"));
+      const roleSnapshot = await getDocs(roleQuery);
 
-      // Check if user is admin by trying to fetch bug reports
-      // If they can fetch, they have admin role
-      const { data, error } = await supabase
-        .from("bug_reports")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Not authorized:", error);
+      if (roleSnapshot.empty) {
         toast({
           title: "Access Denied",
           description: "You don't have admin privileges.",
@@ -89,7 +77,18 @@ const AdminBugReports = () => {
       }
 
       setIsAdmin(true);
-      setBugReports(data || []);
+
+      // Fetch bug reports
+      const reportsRef = collection(db, "bugReports");
+      const reportsQuery = query(reportsRef, orderBy("created_at", "desc"));
+      const snapshot = await getDocs(reportsQuery);
+      
+      const reportsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as BugReport[];
+      
+      setBugReports(reportsData);
     } catch (error) {
       console.error("Error:", error);
       navigate("/");
@@ -100,15 +99,11 @@ const AdminBugReports = () => {
 
   const handleStatusChange = async (reportId: string, newStatus: string) => {
     try {
-      const { error } = await supabase
-        .from("bug_reports")
-        .update({ status: newStatus })
-        .eq("id", reportId);
-
-      if (error) throw error;
+      const reportRef = doc(db, "bugReports", reportId);
+      await updateDoc(reportRef, { status: newStatus });
 
       setBugReports(prev => 
-        prev.map(r => r.id === reportId ? { ...r, status: newStatus } : r)
+        prev.map(r => r.id === reportId ? { ...r, status: newStatus as BugReport['status'] } : r)
       );
 
       toast({
@@ -129,12 +124,8 @@ const AdminBugReports = () => {
     if (!confirm("Are you sure you want to delete this bug report?")) return;
 
     try {
-      const { error } = await supabase
-        .from("bug_reports")
-        .delete()
-        .eq("id", reportId);
-
-      if (error) throw error;
+      const reportRef = doc(db, "bugReports", reportId);
+      await deleteDoc(reportRef);
 
       setBugReports(prev => prev.filter(r => r.id !== reportId));
       setSelectedReport(null);
@@ -154,8 +145,15 @@ const AdminBugReports = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut(auth);
     navigate("/");
+  };
+
+  const refreshReports = () => {
+    if (currentUserId) {
+      setIsLoading(true);
+      checkAdminAndFetch(currentUserId);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -265,7 +263,7 @@ const AdminBugReports = () => {
                 <SelectItem value="closed">Closed</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" onClick={checkAdminAndFetch}>
+            <Button variant="outline" onClick={refreshReports}>
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </Button>

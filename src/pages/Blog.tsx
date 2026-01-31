@@ -5,19 +5,12 @@ import { Footer } from "@/components/layout/Footer";
 import { ParticleBackground } from "@/components/home/ParticleBackground";
 import { motion } from "framer-motion";
 import { BookOpen, Calendar, MapPin, User, ArrowRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-
-type BlogPost = {
-  id: string;
-  created_at: string;
-  title: string;
-  content: string;
-  author: string;
-  location: string | null;
-};
+import { db } from "@/integrations/firebase/client";
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+import type { BlogPost as BlogPostType } from "@/integrations/firebase/types";
 
 const Blog = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<(BlogPostType & { id: string })[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -26,14 +19,20 @@ const Blog = () => {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*")
-        .eq("published", true)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setPosts(data || []);
+      const postsRef = collection(db, "blogPosts");
+      const q = query(
+        postsRef,
+        where("published", "==", true),
+        orderBy("created_at", "desc")
+      );
+      const snapshot = await getDocs(q);
+      
+      const postsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as (BlogPostType & { id: string })[];
+      
+      setPosts(postsData);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {

@@ -9,7 +9,9 @@ import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { Shield, LogIn, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { auth, db } from "@/integrations/firebase/client";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const AdminLogin = () => {
   const { toast } = useToast();
@@ -25,22 +27,16 @@ const AdminLogin = () => {
     setError("");
 
     try {
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      if (userCredential.user) {
+        // Check if user has admin role
+        const rolesRef = collection(db, "userRoles");
+        const q = query(rolesRef, where("user_id", "==", userCredential.user.uid), where("role", "==", "admin"));
+        const snapshot = await getDocs(q);
 
-      if (authError) throw authError;
-
-      if (data.session) {
-        // Try to access bug reports to verify admin status
-        const { error: accessError } = await supabase
-          .from("bug_reports")
-          .select("id")
-          .limit(1);
-
-        if (accessError) {
-          await supabase.auth.signOut();
+        if (snapshot.empty) {
+          await auth.signOut();
           setError("You don't have admin privileges.");
           return;
         }

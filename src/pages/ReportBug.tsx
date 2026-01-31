@@ -16,7 +16,8 @@ import {
 import { motion } from "framer-motion";
 import { Bug, Send, AlertTriangle, Monitor, Smartphone, CheckCircle, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { db } from "@/integrations/firebase/client";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const ReportBug = () => {
   const { toast } = useToast();
@@ -39,7 +40,8 @@ const ReportBug = () => {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase.from("bug_reports").insert({
+      const bugReportsRef = collection(db, "bugReports");
+      await addDoc(bugReportsRef, {
         report_type: "detailed",
         title: formData.title,
         category: formData.category,
@@ -49,9 +51,9 @@ const ReportBug = () => {
         expected_behavior: formData.expectedBehavior,
         actual_behavior: formData.actualBehavior,
         email: formData.email || null,
+        status: "open",
+        created_at: new Date().toISOString(),
       });
-
-      if (error) throw error;
 
       toast({
         title: "Bug Report Submitted!",
@@ -87,12 +89,13 @@ const ReportBug = () => {
     setIsQuickSubmitting(true);
     
     try {
-      const { error } = await supabase.from("bug_reports").insert({
+      const bugReportsRef = collection(db, "bugReports");
+      await addDoc(bugReportsRef, {
         report_type: "quick",
         quick_note: quickNote.trim(),
+        status: "open",
+        created_at: new Date().toISOString(),
       });
-
-      if (error) throw error;
 
       toast({
         title: "Quick Note Sent!",
