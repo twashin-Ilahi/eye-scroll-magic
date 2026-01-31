@@ -27,18 +27,12 @@ import {
 import { motion } from "framer-motion";
 import { BookOpen, Shield, Plus, Edit, Trash2, Eye, RefreshCw, LogOut, Save, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { auth, db } from "@/integrations/firebase/client";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { collection, query, where, orderBy, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import type { BlogPost as BlogPostType } from "@/integrations/firebase/types";
 
-type BlogPost = {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  title: string;
-  content: string;
-  author: string;
-  location: string | null;
-  published: boolean;
-};
+type BlogPost = BlogPostType & { id: string };
 
 const AdminBlog = () => {
   const { toast } = useToast();
@@ -49,6 +43,7 @@ const AdminBlog = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
     title: "",
@@ -59,25 +54,25 @@ const AdminBlog = () => {
   });
 
   useEffect(() => {
-    checkAdminAndFetch();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+        checkAdminAndFetch(user.uid);
+      } else {
+        navigate("/admin/login");
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
-  const checkAdminAndFetch = async () => {
+  const checkAdminAndFetch = async (userId: string) => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        navigate("/admin/login");
-        return;
-      }
+      // Check admin role
+      const rolesRef = collection(db, "userRoles");
+      const roleQuery = query(rolesRef, where("user_id", "==", userId), where("role", "==", "admin"));
+      const roleSnapshot = await getDocs(roleQuery);
 
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error("Not authorized:", error);
+      if (roleSnapshot.empty) {
         toast({
           title: "Access Denied",
           description: "You don't have admin privileges.",
@@ -88,7 +83,18 @@ const AdminBlog = () => {
       }
 
       setIsAdmin(true);
-      setPosts(data || []);
+      
+      // Fetch posts
+      const postsRef = collection(db, "blogPosts");
+      const postsQuery = query(postsRef, orderBy("created_at", "desc"));
+      const snapshot = await getDocs(postsQuery);
+      
+      const postsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as BlogPost[];
+      
+      setPosts(postsData);
     } catch (error) {
       console.error("Error:", error);
       navigate("/");
@@ -134,24 +140,23 @@ const AdminBlog = () => {
     setIsSaving(true);
 
     try {
+      const now = new Date().toISOString();
+      
       if (editingPost) {
         // Update existing post
-        const { error } = await supabase
-          .from("blog_posts")
-          .update({
-            title: formData.title.trim(),
-            content: formData.content.trim(),
-            author: formData.author.trim(),
-            location: formData.location.trim() || null,
-            published: formData.published,
-          })
-          .eq("id", editingPost.id);
-
-        if (error) throw error;
+        const postRef = doc(db, "blogPosts", editingPost.id);
+        await updateDoc(postRef, {
+          title: formData.title.trim(),
+          content: formData.content.trim(),
+          author: formData.author.trim(),
+          location: formData.location.trim() || null,
+          published: formData.published,
+          updated_at: now,
+        });
 
         setPosts(prev => prev.map(p => 
           p.id === editingPost.id 
-            ? { ...p, ...formData, location: formData.location || null }
+            ? { ...p, ...formData, location: formData.location || null, updated_at: now }
             : p
         ));
 
@@ -161,24 +166,21 @@ const AdminBlog = () => {
         });
       } else {
         // Create new post
-        const { data: { session } } = await supabase.auth.getSession();
+        const postsRef = collection(db, "blogPosts");
+        const newPost = {
+          title: formData.title.trim(),
+          content: formData.content.trim(),
+          author: formData.author.trim(),
+          location: formData.location.trim() || null,
+          published: formData.published,
+          author_id: currentUserId,
+          created_at: now,
+          updated_at: now,
+        };
         
-        const { data, error } = await supabase
-          .from("blog_posts")
-          .insert({
-            title: formData.title.trim(),
-            content: formData.content.trim(),
-            author: formData.author.trim(),
-            location: formData.location.trim() || null,
-            published: formData.published,
-            author_id: session?.user?.id,
-          })
-          .select()
-          .single();
+        const docRef = await addDoc(postsRef, newPost);
 
-        if (error) throw error;
-
-        setPosts(prev => [data, ...prev]);
+        setPosts(prev => [{ id: docRef.id, ...newPost } as BlogPost, ...prev]);
 
         toast({
           title: "Post Created",
@@ -203,12 +205,8 @@ const AdminBlog = () => {
     if (!confirm("Are you sure you want to delete this post?")) return;
 
     try {
-      const { error } = await supabase
-        .from("blog_posts")
-        .delete()
-        .eq("id", postId);
-
-      if (error) throw error;
+      const postRef = doc(db, "blogPosts", postId);
+      await deleteDoc(postRef);
 
       setPosts(prev => prev.filter(p => p.id !== postId));
 
@@ -228,12 +226,8 @@ const AdminBlog = () => {
 
   const togglePublished = async (post: BlogPost) => {
     try {
-      const { error } = await supabase
-        .from("blog_posts")
-        .update({ published: !post.published })
-        .eq("id", post.id);
-
-      if (error) throw error;
+      const postRef = doc(db, "blogPosts", post.id);
+      await updateDoc(postRef, { published: !post.published });
 
       setPosts(prev => prev.map(p => 
         p.id === post.id ? { ...p, published: !p.published } : p
@@ -249,8 +243,15 @@ const AdminBlog = () => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await signOut(auth);
     navigate("/");
+  };
+
+  const refreshPosts = () => {
+    if (currentUserId) {
+      setIsLoading(true);
+      checkAdminAndFetch(currentUserId);
+    }
   };
 
   if (isLoading) {
@@ -337,7 +338,7 @@ const AdminBlog = () => {
               <Plus className="w-4 h-4 mr-2" />
               New Post
             </Button>
-            <Button variant="outline" onClick={checkAdminAndFetch}>
+            <Button variant="outline" onClick={refreshPosts}>
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
             </Button>
