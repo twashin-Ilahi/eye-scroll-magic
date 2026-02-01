@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { db } from "@/integrations/firebase/client";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DownloadStats {
   total: number;
@@ -12,20 +11,24 @@ export const useDownloadStats = () => {
   return useQuery<DownloadStats>({
     queryKey: ["download-stats"],
     queryFn: async () => {
-      const downloadsRef = collection(db, "downloads");
-      const snapshot = await getDocs(downloadsRef);
-      
-      const docs = snapshot.docs.map(doc => doc.data());
-      
+      const { data, error } = await supabase
+        .from("downloads")
+        .select("platform");
+
+      if (error) {
+        console.error("Error fetching download stats:", error);
+        return { total: 0, mac: 0, windows: 0 };
+      }
+
       const stats = {
-        total: docs.length,
-        mac: docs.filter((d) => d.platform === "mac").length,
-        windows: docs.filter((d) => d.platform === "windows").length,
+        total: data.length,
+        mac: data.filter((d) => d.platform === "mac").length,
+        windows: data.filter((d) => d.platform === "windows").length,
       };
 
       return stats;
     },
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   });
 };
 
@@ -34,11 +37,14 @@ export const useRecordDownload = () => {
 
   return useMutation({
     mutationFn: async (platform: "mac" | "windows") => {
-      const downloadsRef = collection(db, "downloads");
-      await addDoc(downloadsRef, {
-        platform,
-        downloaded_at: serverTimestamp(),
-      });
+      const { error } = await supabase
+        .from("downloads")
+        .insert({ platform });
+
+      if (error) {
+        console.error("Error recording download:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["download-stats"] });
