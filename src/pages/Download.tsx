@@ -29,7 +29,7 @@ const platforms = [
     icon: Monitor,
     version: "1.0.0",
     size: "~30 MB",
-    file: "/NavEye.exe",
+    file: "https://github.com/twashin-Ilahi/eye-scroll-magic/releases/download/Windows_v1/NavEye.exe",
     requirements: [
       "Windows 10 or Windows 11",
       "64-bit processor",
