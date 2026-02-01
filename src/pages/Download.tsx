@@ -29,7 +29,7 @@ const platforms = [
     icon: Monitor,
     version: "1.0.0",
     size: "~30 MB",
-    file: "/downloads/NavEye-win.exe",
+    file: "/NavEye.exe",
     requirements: [
       "Windows 10 or Windows 11",
       "64-bit processor",
