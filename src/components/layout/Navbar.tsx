@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Github } from "lucide-react";
 import { useState } from "react";
 import naveyeLogo from "@/assets/naveye-logo.png";
 
@@ -53,7 +53,15 @@ export const Navbar = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <a
+              href="https://github.com/twashin-Ilahi/eye-scroll-magic"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+            >
+              <Github className="w-5 h-5" />
+            </a>
             <Link to="/download">
               <motion.button
                 whileHover={{ scale: 1.02 }}
