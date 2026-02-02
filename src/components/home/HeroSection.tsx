@@ -87,7 +87,7 @@ export const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3"
         >
-          <Link to="/download?platform=mac">
+          <Link to="/download/mac">
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
@@ -98,7 +98,7 @@ export const HeroSection = () => {
             </motion.button>
           </Link>
 
-          <Link to="/download?platform=windows">
+          <Link to="/download/windows">
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
