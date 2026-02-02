@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Apple, Monitor, Download, CheckCircle, ArrowDown } from "lucide-react";
+import { Apple, Monitor, Download, CheckCircle, ArrowDown, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingShapes } from "@/components/home/FloatingShapes";
 import { useDownloadStats, useRecordDownload } from "@/hooks/useDownloadStats";
 import { TermsDialog } from "@/components/download/TermsDialog";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const platforms = [
   {
@@ -16,6 +17,7 @@ const platforms = [
     version: "1.0.0",
     size: "~25 MB",
     file: "/downloads/NavEye-mac.dmg",
+    link: "/download/mac",
     requirements: [
       "macOS 12 Monterey or later",
       "Apple Silicon or Intel processor",
@@ -30,6 +32,7 @@ const platforms = [
     version: "1.0.0",
     size: "~30 MB",
     file: "https://github.com/twashin-Ilahi/eye-scroll-magic/releases/download/Windows_v1/NavEye.exe",
+    link: "/download/windows",
     requirements: [
       "Windows 10 or Windows 11",
       "64-bit processor",
@@ -187,11 +190,19 @@ const DownloadPage = () => {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleDownloadClick(platform)}
                   disabled={recordDownload.isPending}
-                  className="btn-primary w-full flex items-center justify-center gap-3"
+                  className="btn-primary w-full flex items-center justify-center gap-3 mb-3"
                 >
                   <ArrowDown className="w-5 h-5" />
                   Download for {platform.name}
                 </motion.button>
+
+                {/* Setup Guide Link */}
+                <Link 
+                  to={platform.link}
+                  className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  View setup guide & troubleshooting <ChevronRight className="w-4 h-4" />
+                </Link>
               </motion.div>
             ))}
           </div>

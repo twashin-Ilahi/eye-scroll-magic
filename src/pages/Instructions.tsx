@@ -100,7 +100,7 @@ const troubleshooting = [
   },
   {
     question: "NavEye isn't working in a specific app",
-    answer: "Some apps may have custom scroll handling. Try enabling 'Compatibility Mode' in NavEye Settings. If the issue persists, report it on our GitHub issues page.",
+    answer: "Some apps may have custom scroll handling. Try enabling 'Compatibility Mode' in NavEye Settings. If the issue persists, report it via our Report Bug page.",
   },
   {
     question: "High CPU usage",
@@ -330,16 +330,14 @@ const InstructionsPage = () => {
             >
               <h3 className="text-xl font-semibold mb-3">Still need help?</h3>
               <p className="text-muted-foreground mb-6">
-                Check out our GitHub discussions or reach out to support.
+                Report an issue or reach out to our support team.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <a
-                  href="https://github.com/naveye/issues"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/report-bug"
                   className="btn-secondary text-sm px-6 py-3"
                 >
-                  Open GitHub Issue
+                  Report an Issue
                 </a>
                 <a href="mailto:hello@naveye.app" className="btn-primary text-sm px-6 py-3">
                   Contact Support
