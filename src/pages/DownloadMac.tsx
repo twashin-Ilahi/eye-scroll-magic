@@ -23,7 +23,7 @@ const platform = {
   icon: Apple,
   version: "1.0.0",
   size: "~210 MB",
-  file: "/downloads/NavEye-mac.dmg",
+  file: "https://github.com/twashin-Ilahi/eye-scroll-magic/releases/download/MacOS_v1/NavEye_Installer.dmg",
   requirements: [
     "macOS 12 Monterey or later",
     "Apple Silicon or Intel processor",
