@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user has admin role
+    function isAdmin() {
+      return isAuthenticated() &&
+             exists(/databases/$(database)/documents/userRoles/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/userRoles/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // User Roles Collection
+    // - Users can read their own role
+    // - Only admins can create, update, or delete roles
+    match /userRoles/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Blog Posts Collection
+    // - Anyone can read published posts
+    // - Only admins can read unpublished posts
+    // - Only admins can create, update, or delete posts
+    match /blogPosts/{postId} {
+      allow read: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Bug Reports Collection
+    // - Anyone can submit a bug report
+    // - Only admins can read, update, or delete bug reports
+    match /bugReports/{reportId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // Default deny all other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
