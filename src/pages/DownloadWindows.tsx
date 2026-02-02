@@ -15,12 +15,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import { FirstTimeSetupDialog } from "@/components/download/FirstTimeSetupDialog";
+
 const platform = {
   id: "windows" as const,
   name: "Windows",
   icon: Monitor,
   version: "1.0.0",
-  size: "~30 MB",
+  size: "~210 MB",
   file: "https://github.com/twashin-Ilahi/eye-scroll-magic/releases/download/Windows_v1/NavEye.exe",
   requirements: [
     "Windows 10 or Windows 11",
@@ -32,7 +34,7 @@ const platform = {
 const troubleshooting = [
   {
     title: '"Windows protected your PC" - SmartScreen warning',
-    solution: `This warning appears because NavEye isn't signed with an expensive code signing certificate (we're students!). The app is completely safe.
+    solution: `This warning appears because NavEye isn't signed with an expensive code signing certificate (I'm a student!). The app is completely safe.
 
 **To run NavEye:**
 1. Click "More info" on the SmartScreen popup
@@ -104,6 +106,7 @@ const DownloadWindows = () => {
   const { data: stats, isLoading } = useDownloadStats();
   const recordDownload = useRecordDownload();
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
+  const [setupDialogOpen, setSetupDialogOpen] = useState(false);
 
   const handleDownloadClick = () => {
     setTermsDialogOpen(true);
@@ -124,10 +127,12 @@ const DownloadWindows = () => {
       document.body.removeChild(link);
       
       setTermsDialogOpen(false);
+      setSetupDialogOpen(true);
     } catch (error) {
       toast.error("Download tracking failed, but your download should still work.");
       window.open(platform.file, "_blank");
       setTermsDialogOpen(false);
+      setSetupDialogOpen(true);
     }
   };
 
@@ -229,7 +234,7 @@ const DownloadWindows = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-2 text-amber-500">Important: First-Time Setup</h3>
                 <p className="text-muted-foreground mb-4">
-                  NavEye isn't signed with an expensive code signing certificate (we're students and these cost hundreds of dollars!). 
+                  NavEye isn't signed with an expensive code signing certificate (I'm a student and these cost hundreds of dollars!).
                   Windows SmartScreen will show a warning. <strong>The app is completely safe</strong> — here's how to run it:
                 </p>
                 <div className="space-y-3">
@@ -331,6 +336,12 @@ const DownloadWindows = () => {
         onAgree={handleAgreeAndDownload}
         platformName={platform.name}
         isLoading={recordDownload.isPending}
+      />
+
+      <FirstTimeSetupDialog
+        open={setupDialogOpen}
+        onOpenChange={setSetupDialogOpen}
+        platform="windows"
       />
 
       <Footer />
