@@ -2,14 +2,9 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { 
-  Camera, 
-  Hand, 
-  Play, 
   ArrowUpDown, 
   PauseCircle,
-  Settings,
   AlertCircle,
-  Monitor,
   RefreshCw,
   Eye,
   Lightbulb
@@ -22,45 +17,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-const installationSteps = [
-  {
-    icon: Camera,
-    title: "1. Download NavEye",
-    description: "Download the installer for your operating system from the Download page.",
-    details: [
-      "macOS: Open the .dmg file and drag NavEye to Applications",
-      "Windows: Run the .exe installer and follow the prompts",
-    ],
-  },
-  {
-    icon: Hand,
-    title: "2. Grant Camera Permission",
-    description: "When you first open NavEye, you'll be prompted to allow camera access.",
-    details: [
-      "macOS: Click 'OK' when System Preferences prompts for camera access",
-      "Windows: Allow access in the Windows privacy settings",
-    ],
-  },
-  {
-    icon: Settings,
-    title: "3. Grant Accessibility Permission",
-    description: "NavEye needs accessibility access to control scrolling system-wide.",
-    details: [
-      "macOS: Go to System Preferences → Privacy & Security → Accessibility → Enable NavEye",
-      "Windows: Run NavEye as Administrator the first time, or adjust UAC settings",
-    ],
-  },
-  {
-    icon: Play,
-    title: "4. Start NavEye",
-    description: "Click the NavEye icon in your menu bar or system tray to start.",
-    details: [
-      "The icon will change color to indicate tracking is active",
-      "Look directly at your camera briefly to calibrate",
-    ],
-  },
-];
 
 const usageTips = [
   {
@@ -113,11 +69,9 @@ const troubleshooting = [
 ];
 
 const InstructionsPage = () => {
-  const installRef = useRef(null);
   const usageRef = useRef(null);
   const troubleRef = useRef(null);
   
-  const installInView = useInView(installRef, { once: true, margin: "-100px" });
   const usageInView = useInView(usageRef, { once: true, margin: "-100px" });
   const troubleInView = useInView(troubleRef, { once: true, margin: "-100px" });
 
@@ -135,10 +89,10 @@ const InstructionsPage = () => {
             className="text-center mb-16"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Getting Started with <span className="gradient-text">NavEye</span>
+              How to Use <span className="gradient-text">NavEye</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              A complete guide to installing and using NavEye for hands-free scrolling.
+              Master hands-free scrolling with these simple gestures and tips.
             </p>
           </motion.div>
 
@@ -149,9 +103,6 @@ const InstructionsPage = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex flex-wrap items-center justify-center gap-4 mb-20"
           >
-            <a href="#installation" className="counter-display hover:bg-secondary transition-colors">
-              Installation
-            </a>
             <a href="#usage" className="counter-display hover:bg-secondary transition-colors">
               How to Use
             </a>
@@ -159,60 +110,6 @@ const InstructionsPage = () => {
               Troubleshooting
             </a>
           </motion.div>
-
-          {/* Installation Section */}
-          <section id="installation" className="mb-24" ref={installRef}>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={installInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6 }}
-              className="mb-12"
-            >
-              <h2 className="section-title text-3xl mb-4">Installation</h2>
-              <p className="text-muted-foreground">
-                Follow these steps to get NavEye running on your computer.
-              </p>
-            </motion.div>
-
-            <div className="space-y-6">
-              {installationSteps.map((step, index) => (
-                <motion.div
-                  key={step.title}
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={installInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  className="step-card"
-                >
-                  <div className="flex items-start gap-6">
-                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <step.icon className="w-7 h-7 text-primary" />
-                    </div>
-                    <div className="flex-grow">
-                      <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                      <p className="text-muted-foreground mb-4">{step.description}</p>
-                      
-                      {/* Screenshot placeholder */}
-                      <div className="mb-4 rounded-xl overflow-hidden bg-secondary/50 aspect-video flex items-center justify-center border border-border/50">
-                        <div className="text-center text-muted-foreground">
-                          <Monitor className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Screenshot placeholder</p>
-                        </div>
-                      </div>
-
-                      <ul className="space-y-2">
-                        {step.details.map((detail, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <Lightbulb className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                            <span>{detail}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </section>
 
           {/* Usage Section */}
           <section id="usage" className="mb-24" ref={usageRef}>
