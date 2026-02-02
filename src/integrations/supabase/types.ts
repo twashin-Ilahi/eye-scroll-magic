@@ -119,6 +119,42 @@ export type Database = {
         }
         Relationships: []
       }
+      join_requests: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          portfolio_url: string | null
+          role_type: string
+          skills: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          portfolio_url?: string | null
+          role_type: string
+          skills?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          portfolio_url?: string | null
+          role_type?: string
+          skills?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

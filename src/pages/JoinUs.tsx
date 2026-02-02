@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { JoinUsFormDialog } from "@/components/joinus/JoinUsFormDialog";
 import { 
   Code, 
   Heart, 
@@ -43,6 +45,8 @@ const roles = [
 ];
 
 export default function JoinUs() {
+  const [selectedRole, setSelectedRole] = useState<typeof roles[0] | null>(null);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -149,6 +153,7 @@ export default function JoinUs() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedRole(role)}
                     className="w-full py-3 rounded-lg font-medium transition-colors"
                     style={{ 
                       backgroundColor: `${role.color}20`,
@@ -208,6 +213,15 @@ export default function JoinUs() {
       </section>
 
       <Footer />
+
+      {/* Form Dialog */}
+      <JoinUsFormDialog
+        open={!!selectedRole}
+        onOpenChange={(open) => !open && setSelectedRole(null)}
+        roleType={selectedRole?.title || ""}
+        roleTitle={selectedRole?.title || ""}
+        roleColor={selectedRole?.color || "#4A90E2"}
+      />
     </div>
   );
 }
