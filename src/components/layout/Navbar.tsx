@@ -55,7 +55,7 @@ export const Navbar = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
             <a
-              href="https://github.com/twashin-Ilahi/eye-scroll-magic"
+              href="https://github.com/twashin-Ilahi/NavEye"
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg hover:bg-secondary transition-colors"

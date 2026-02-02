@@ -20,7 +20,7 @@ export const Footer = () => {
             </p>
             <div className="flex items-center gap-4">
               <a
-                href="https://github.com/twashin-Ilahi/eye-scroll-magic"
+                href="https://github.com/twashin-Ilahi/NavEye"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
