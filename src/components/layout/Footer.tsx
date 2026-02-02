@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Github, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import naveyeLogo from "@/assets/naveye-logo.png";
 
 export const Footer = () => {
@@ -19,14 +19,6 @@ export const Footer = () => {
               Hands-free scrolling powered by your eyes. Free, fast, and completely private.
             </p>
             <div className="flex items-center gap-4">
-              <a
-                href="https://github.com/naveye"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
-              >
-                <Github className="w-5 h-5" />
-              </a>
               <a
                 href="mailto:hello@naveye.app"
                 className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
@@ -59,9 +51,9 @@ export const Footer = () => {
               <Link to="/instructions#troubleshooting" className="text-muted-foreground hover:text-foreground transition-colors">
                 Troubleshooting
               </Link>
-              <a href="https://github.com/naveye/issues" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/report-bug" className="text-muted-foreground hover:text-foreground transition-colors">
                 Report Issue
-              </a>
+              </Link>
               <a href="mailto:hello@naveye.app" className="text-muted-foreground hover:text-foreground transition-colors">
                 Contact
               </a>

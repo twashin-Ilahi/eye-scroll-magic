@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     question: "Is NavEye free?",
-    answer: "Yes, NavEye is completely free to download and use. We believe accessibility tools should be available to everyone. If you'd like to support development, you can star our GitHub repo or spread the word.",
+    answer: "Yes, NavEye is completely free to download and use. We believe accessibility tools should be available to everyone. If you'd like to support development, spread the word to friends and family!",
   },
   {
     question: "What if eye tracking isn't accurate?",

@@ -8,7 +8,6 @@ import {
   Smartphone, 
   Users, 
   Mail,
-  Github,
   DollarSign
 } from "lucide-react";
 
@@ -16,7 +15,7 @@ const roles = [
   {
     icon: Code,
     title: "App Maintainers",
-    description: "Help us maintain and improve NavEye. We're looking for developers who are passionate about accessibility and open-source software.",
+    description: "Help us maintain and improve NavEye. We're looking for developers who are passionate about accessibility.",
     skills: ["Python", "Computer Vision", "Desktop Development", "Eye Tracking"],
     color: "#4A90E2"
   },
@@ -190,23 +189,11 @@ export default function JoinUs() {
                 <Mail className="w-5 h-5" />
                 Contact Us
               </motion.a>
-              
-              <motion.a
-                href="https://github.com/naveye"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="btn-secondary flex items-center gap-2 min-w-[200px]"
-              >
-                <Github className="w-5 h-5" />
-                View on GitHub
-              </motion.a>
             </div>
             
             {/* Donation CTA */}
             <div className="mt-10 pt-8 border-t border-primary/20">
-              <p className="text-sm text-muted-foreground mb-4">Support our open-source mission</p>
+              <p className="text-sm text-muted-foreground mb-4">Support our mission for accessibility</p>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

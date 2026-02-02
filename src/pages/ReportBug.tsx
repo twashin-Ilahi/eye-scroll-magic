@@ -414,14 +414,12 @@ const ReportBug = () => {
             className="text-center mt-12"
           >
             <p className="text-muted-foreground">
-              Prefer GitHub? Report issues directly on our{" "}
+              Need immediate help?{" "}
               <a
-                href="https://github.com/naveye/naveye/issues"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:hello@naveye.app"
                 className="text-primary hover:underline"
               >
-                GitHub repository
+                Contact our support team
               </a>
             </p>
           </motion.div>

@@ -1,6 +1,5 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { GitBranch, Star, GitFork, Users } from "lucide-react";
 
 // Animated terminal
 const AnimatedTerminal = () => {
@@ -81,38 +80,6 @@ const AnimatedTerminal = () => {
           className="inline-block w-2 h-4 bg-primary ml-1"
         />
       </div>
-    </div>
-  );
-};
-
-// GitHub stats
-const GitHubStats = () => {
-  const stats = [
-    { icon: Star, label: "Stars", value: "2.4k", color: "#f59e0b" },
-    { icon: GitFork, label: "Forks", value: "156", color: "#4A90E2" },
-    { icon: Users, label: "Contributors", value: "23", color: "#9B59B6" },
-    { icon: GitBranch, label: "Releases", value: "12", color: "#22c55e" },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 gap-4">
-      {stats.map((stat, index) => (
-        <motion.div
-          key={stat.label}
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: index * 0.1 }}
-          viewport={{ once: true }}
-          className="glass-card p-4 text-center group hover:border-primary/30 transition-colors"
-        >
-          <stat.icon 
-            className="w-6 h-6 mx-auto mb-2" 
-            style={{ color: stat.color }}
-          />
-          <div className="text-2xl font-bold mb-1">{stat.value}</div>
-          <div className="text-xs text-muted-foreground">{stat.label}</div>
-        </motion.div>
-      ))}
     </div>
   );
 };
@@ -247,18 +214,6 @@ export const TechSection = () => {
             <AnimatedTerminal />
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-12"
-        >
-          <h3 className="text-lg font-semibold mb-4 text-center">Open Source</h3>
-          <div className="max-w-md mx-auto">
-            <GitHubStats />
-          </div>
-        </motion.div>
       </div>
     </section>
   );
