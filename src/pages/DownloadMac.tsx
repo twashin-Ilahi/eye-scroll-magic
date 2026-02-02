@@ -15,12 +15,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+import { FirstTimeSetupDialog } from "@/components/download/FirstTimeSetupDialog";
+
 const platform = {
   id: "mac" as const,
   name: "macOS",
   icon: Apple,
   version: "1.0.0",
-  size: "~25 MB",
+  size: "~210 MB",
   file: "/downloads/NavEye-mac.dmg",
   requirements: [
     "macOS 12 Monterey or later",
@@ -32,7 +34,7 @@ const platform = {
 const troubleshooting = [
   {
     title: '"NavEye" can\'t be opened because it is from an unidentified developer',
-    solution: `This happens because NavEye isn't notarized with Apple (we're students and can't afford the $99/year developer fee). Don't worry - the app is completely safe!
+    solution: `This happens because NavEye isn't notarized with Apple (I'm a student and can't afford the $99/year developer fee). Don't worry - the app is completely safe!
 
 **To open NavEye:**
 1. Right-click (or Control-click) on the NavEye app
@@ -85,6 +87,7 @@ const DownloadMac = () => {
   const { data: stats, isLoading } = useDownloadStats();
   const recordDownload = useRecordDownload();
   const [termsDialogOpen, setTermsDialogOpen] = useState(false);
+  const [setupDialogOpen, setSetupDialogOpen] = useState(false);
 
   const handleDownloadClick = () => {
     setTermsDialogOpen(true);
@@ -105,10 +108,12 @@ const DownloadMac = () => {
       document.body.removeChild(link);
       
       setTermsDialogOpen(false);
+      setSetupDialogOpen(true);
     } catch (error) {
       toast.error("Download tracking failed, but your download should still work.");
       window.open(platform.file, "_blank");
       setTermsDialogOpen(false);
+      setSetupDialogOpen(true);
     }
   };
 
@@ -210,7 +215,7 @@ const DownloadMac = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-2 text-amber-500">Important: First-Time Setup</h3>
                 <p className="text-muted-foreground mb-4">
-                  NavEye is developed by students and isn't notarized with Apple (the $99/year developer fee is expensive for us!). 
+                  NavEye is developed by me, a student, and isn't notarized with Apple (the $99/year developer fee is expensive for me!). 
                   macOS will show a warning when you first try to open it. <strong>The app is completely safe</strong> — here's how to open it:
                 </p>
                 <div className="space-y-3">
@@ -312,6 +317,12 @@ const DownloadMac = () => {
         onAgree={handleAgreeAndDownload}
         platformName={platform.name}
         isLoading={recordDownload.isPending}
+      />
+
+      <FirstTimeSetupDialog
+        open={setupDialogOpen}
+        onOpenChange={setSetupDialogOpen}
+        platform="mac"
       />
 
       <Footer />

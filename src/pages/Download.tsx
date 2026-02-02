@@ -1,12 +1,9 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Apple, Monitor, Download, CheckCircle, ArrowDown, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingShapes } from "@/components/home/FloatingShapes";
-import { useDownloadStats, useRecordDownload } from "@/hooks/useDownloadStats";
-import { TermsDialog } from "@/components/download/TermsDialog";
-import { toast } from "sonner";
+import { useDownloadStats } from "@/hooks/useDownloadStats";
 import { Link } from "react-router-dom";
 
 const platforms = [
@@ -15,8 +12,7 @@ const platforms = [
     name: "macOS",
     icon: Apple,
     version: "1.0.0",
-    size: "~25 MB",
-    file: "/downloads/NavEye-mac.dmg",
+    size: "~210 MB",
     link: "/download/mac",
     requirements: [
       "macOS 12 Monterey or later",
@@ -30,8 +26,7 @@ const platforms = [
     name: "Windows",
     icon: Monitor,
     version: "1.0.0",
-    size: "~30 MB",
-    file: "https://github.com/twashin-Ilahi/eye-scroll-magic/releases/download/Windows_v1/NavEye.exe",
+    size: "~210 MB",
     link: "/download/windows",
     requirements: [
       "Windows 10 or Windows 11",
@@ -44,50 +39,6 @@ const platforms = [
 
 const DownloadPage = () => {
   const { data: stats, isLoading } = useDownloadStats();
-  const recordDownload = useRecordDownload();
-  const [termsDialogOpen, setTermsDialogOpen] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState<{
-    id: "mac" | "windows";
-    name: string;
-    file: string;
-  } | null>(null);
-
-  const handleDownloadClick = (platform: typeof platforms[0]) => {
-    setSelectedPlatform({
-      id: platform.id,
-      name: platform.name,
-      file: platform.file,
-    });
-    setTermsDialogOpen(true);
-  };
-
-  const handleAgreeAndDownload = async () => {
-    if (!selectedPlatform) return;
-
-    try {
-      await recordDownload.mutateAsync(selectedPlatform.id);
-      toast.success(`Thank you for downloading NavEye!`, {
-        description: "Your download will start shortly.",
-      });
-      
-      // Trigger download
-      const link = document.createElement("a");
-      link.href = selectedPlatform.file;
-      link.download = selectedPlatform.file.split("/").pop() || "NavEye";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      setTermsDialogOpen(false);
-      setSelectedPlatform(null);
-    } catch (error) {
-      toast.error("Download tracking failed, but your download should still work.");
-      // Still attempt the download
-      window.open(selectedPlatform.file, "_blank");
-      setTermsDialogOpen(false);
-      setSelectedPlatform(null);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -185,16 +136,16 @@ const DownloadPage = () => {
                 </div>
 
                 {/* Download Button */}
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleDownloadClick(platform)}
-                  disabled={recordDownload.isPending}
-                  className="btn-primary w-full flex items-center justify-center gap-3 mb-3"
-                >
-                  <ArrowDown className="w-5 h-5" />
-                  Download for {platform.name}
-                </motion.button>
+                <Link to={platform.link} className="block w-full">
+                  <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="btn-primary w-full flex items-center justify-center gap-3 mb-3"
+                  >
+                    <ArrowDown className="w-5 h-5" />
+                    Download for {platform.name}
+                  </motion.button>
+                </Link>
 
                 {/* Setup Guide Link */}
                 <Link 
@@ -223,15 +174,6 @@ const DownloadPage = () => {
           </motion.div>
         </div>
       </main>
-
-      {/* Terms Dialog */}
-      <TermsDialog
-        open={termsDialogOpen}
-        onOpenChange={setTermsDialogOpen}
-        onAgree={handleAgreeAndDownload}
-        platformName={selectedPlatform?.name || ""}
-        isLoading={recordDownload.isPending}
-      />
 
       <Footer />
     </div>
