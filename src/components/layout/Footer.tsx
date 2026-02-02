@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail } from "lucide-react";
+import { Mail, Github } from "lucide-react";
 import naveyeLogo from "@/assets/naveye-logo.png";
 
 export const Footer = () => {
@@ -19,6 +19,14 @@ export const Footer = () => {
               Hands-free scrolling powered by your eyes. Free, fast, and completely private.
             </p>
             <div className="flex items-center gap-4">
+              <a
+                href="https://github.com/twashin-Ilahi/eye-scroll-magic"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
+              >
+                <Github className="w-5 h-5" />
+              </a>
               <a
                 href="mailto:hello@naveye.app"
                 className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center hover:bg-secondary/80 transition-colors"
