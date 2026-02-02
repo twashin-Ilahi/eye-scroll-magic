@@ -5,7 +5,6 @@ import {
   ArrowUpDown, 
   PauseCircle,
   AlertCircle,
-  RefreshCw,
   Eye,
   Lightbulb
 } from "lucide-react";
@@ -31,13 +30,8 @@ const usageTips = [
   },
   {
     icon: PauseCircle,
-    title: "Close Both Eyes = Pause",
-    description: "Close both eyes for about 1 second to pause tracking. Open them to resume.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Wink to Click",
-    description: "Quick wink with your left eye for left click, right eye for right click (if enabled in settings).",
+    title: "Open Both Eyes = Pause",
+    description: "Open both eyes wide for about 1 second to pause tracking. Resume normal gaze to continue.",
   },
 ];
 
