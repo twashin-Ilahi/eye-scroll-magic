@@ -26,7 +26,7 @@ const platform = {
   file: "https://github.com/twashin-Ilahi/eye-scroll-magic/releases/download/Windows_v1/NavEye.exe",
   requirements: [
     "Windows 10 or Windows 11",
-    "64-bit processor",
+    "32-bit or 64-bit processor",
     "Built-in or external webcam",
   ],
 };
@@ -44,16 +44,17 @@ Windows will remember your choice and won't show this warning again for NavEye.`
   },
   {
     title: '"This app can\'t run on your PC"',
-    solution: `This usually means you're trying to run the app on a 32-bit system.
+    solution: `This error can occur for a few reasons.
 
-**Requirements:**
-- Windows 10 or Windows 11
-- 64-bit operating system
+**Check these:**
+1. Make sure you're running Windows 10 or Windows 11
+2. Try running as Administrator (right-click → Run as administrator)
+3. Check if you have the latest Windows updates installed
 
-To check your system type:
+To check your Windows version:
 1. Press Windows + I to open Settings
 2. Go to System → About
-3. Look for "System type" - it should say "64-bit operating system"`,
+3. Look for "Edition" and "Version"`,
   },
   {
     title: "Antivirus blocking NavEye",
